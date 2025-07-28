@@ -1,218 +1,105 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>POOL Supplies</title>
+  <meta charset="UTF-8">
+  <title>فاتورة مبيعات</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      direction: rtl;
-      background-color: #00bfff;
-      color: white;
-      text-align: center; /* خلي كل النصوص بالمنتصف */
+      padding: 30px;
+      background-color: #f9f9f9;
     }
-    .header {
-      background-color: #009acd;
-      color: white;
-      padding: 20px;
-      font-size: 28px;
-      font-weight: bold;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 15px;
-      flex-wrap: wrap;
+    h2 {
+      text-align: center;
     }
-    .header img {
-      height: 50px;
-      width: auto;
-      border-radius: 10px;
-    }
-    .container {
-      padding: 30px 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .media-section {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-      margin-bottom: 20px;
-    }
-    .product-image {
-      width: 250px;
-      height: 250px;
-      object-fit: cover;
-      border-radius: 10px;
-      border: 3px solid white;
-      background-color: #fff;
-      cursor: pointer;
-      transition: transform 0.3s ease;
-    }
-    .product-image:hover {
-      transform: scale(1.05);
-    }
-    .video-box {
-      width: 250px;
-      height: 250px;
-      border-radius: 10px;
-      overflow: hidden;
-      border: 3px solid white;
-      background-color: #fff;
-    }
-    .video-box video {
+    table {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .price-section {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-    .price, .whatsapp-button {
-      font-size: 16px; /* صغر الحجم */
-      font-weight: bold;
-      padding: 8px 20px;
-      border-radius: 10px;
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      min-width: 100px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      text-decoration: none;
-    }
-    .price {
-      background-color: #ffffff;
-      color: #000;
-    }
-    .whatsapp-button {
-      background-color: #25D366;
-      color: white;
-      box-shadow: 0 4px 8px rgba(37, 211, 102, 0.5);
-      transition: background-color 0.3s ease;
-    }
-    .whatsapp-button:hover {
-      background-color: #1ebe5d;
-    }
-    .call-button {
-      display: inline-block;
-      padding: 10px 25px;
-      font-size: 16px;
-      color: white;
-      background-color: red;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      text-decoration: none;
+      border-collapse: collapse;
       margin-top: 20px;
+      background: white;
     }
-    .call-button:hover {
-      background-color: darkred;
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
     }
-    .delivery-info {
-      font-size: 18px;
-      color: #fff;
-      margin-top: 10px;
-      font-style: italic;
+    th {
+      background-color: #eee;
     }
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
+    input {
       width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.8);
-      justify-content: center;
-      align-items: center;
+      box-sizing: border-box;
+      text-align: center;
     }
-    .modal img {
-      max-width: 90%;
-      max-height: 90%;
-      border-radius: 5px;
+    .buttons {
+      margin-top: 20px;
+      text-align: center;
     }
-    .modal .close {
-      position: absolute;
-      top: 20px;
-      right: 30px;
-      color: white;
-      font-size: 30px;
-      font-weight: bold;
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 16px;
       cursor: pointer;
     }
   </style>
 </head>
 <body>
 
-  <div class="header">
-    <img src="https://i.postimg.cc/s2YvSfC5/c2903db7-d56a-470c-8ab4-84c592de2a63.jpg" alt="POOL Supplies Logo">
-    <span>POOL Supplies</span>
-  </div>
+  <h2>فاتورة مبيعات</h2>
 
-  <div class="container">
-    <div class="media-section">
-      <!-- صور المنتجات -->
-      <img class="product-image" src="https://i.postimg.cc/90NRLxM2/auto-Cleaner-20250722-140941-0000.png" alt="منتج 1" onclick="openModal(this)" />
-      <div class="video-box">
-        <video autoplay muted loop playsinline>
-          <source src="VN20250726_135923.mp4" type="video/mp4">
-          متصفحك لا يدعم تشغيل الفيديو.
-        </video>
-      </div>
-      <img class="product-image" src="https://i.postimg.cc/B6Rc6QTH/IMG-3463.jpg" alt="منتج 2" onclick="openModal(this)" />
-    </div>
+  <table id="invoiceTable">
+    <thead>
+      <tr>
+        <th>رقم البند</th>
+        <th>البيان</th>
+        <th>الكمية</th>
+        <th>السعر</th>
+        <th>الإجمالي</th>
+        <th>حذف</th>
+      </tr>
+    </thead>
+    <tbody id="invoiceBody">
+      <!-- يتم إضافة الصفوف ديناميكيًا -->
+    </tbody>
+  </table>
 
-    <div class="price-section">
-      <div class="price">375 دينار</div>
-      <a href="https://wa.me/962797610007" target="_blank" rel="noopener" class="whatsapp-button" aria-label="اتصل عبر واتساب">
-         Whatsapp link
-      </a>
-    </div>
-
-    <div class="delivery-info">(توصيل لجميع محافظات المملكة)</div>
-    <a href="tel:+962797610007" class="call-button">للإتصال والاستفسار</a>
-  </div>
-
-  <!-- عرض الصورة بالحجم الكامل -->
-  <div id="imageModal" class="modal" onclick="closeModal()">
-    <span class="close">&times;</span>
-    <img id="modalImage" />
+  <div class="buttons">
+    <button onclick="addRow()">إضافة بند</button>
+    <button onclick="print()">طباعة</button>
   </div>
 
   <script>
-    const modal = document.getElementById("imageModal");
-    const modalImage = document.getElementById("modalImage");
-    const closeBtn = document.querySelector(".modal .close");
+    let counter = 1;
 
-    function openModal(img) {
-      modal.style.display = "flex";
-      modalImage.src = img.src;
+    function addRow() {
+      const table = document.getElementById("invoiceBody");
+      const row = table.insertRow();
+      
+      row.innerHTML = `
+        <td>${counter++}</td>
+        <td><input type="text" placeholder="البيان"></td>
+        <td><input type="number" value="1" min="1" onchange="updateTotal(this)"></td>
+        <td><input type="number" value="0" min="0" onchange="updateTotal(this)"></td>
+        <td class="total">0</td>
+        <td><button onclick="deleteRow(this)">❌</button></td>
+      `;
     }
 
-    function closeModal() {
-      modal.style.display = "none";
+    function updateTotal(input) {
+      const row = input.closest('tr');
+      const quantity = parseFloat(row.cells[2].querySelector('input').value) || 0;
+      const price = parseFloat(row.cells[3].querySelector('input').value) || 0;
+      const total = quantity * price;
+      row.cells[4].textContent = total.toFixed(2);
     }
 
-    // إغلاق المودال لما يضغط على الخلفية أو زر الإغلاق فقط
-    modal.addEventListener("click", (e) => {
-      if (e.target === modal || e.target === closeBtn) {
-        closeModal();
-      }
-    });
+    function deleteRow(button) {
+      const row = button.closest('tr');
+      row.remove();
+    }
 
-    // منع إغلاق المودال عند الضغط على الصورة نفسها
-    modalImage.addEventListener("click", (e) => {
-      e.stopPropagation();
-    });
+    // أضف صف أول تلقائيًا عند الفتح
+    window.onload = () => addRow();
   </script>
 
 </body>
