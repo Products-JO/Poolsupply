@@ -202,9 +202,6 @@
   <button onclick="window.print()">طباعة</button>
 </div>
 
-<!-- مكتبة حفظ PDF -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
 <script>
   let counter = 2;
 
@@ -262,17 +259,6 @@
   window.onload = () => {
     document.getElementById("invoiceDate").value = new Date().toLocaleDateString('ar-EG');
     updateGrandTotal();
-
-    setTimeout(() => {
-      const opt = {
-        margin: 0.3,
-        filename: `فاتورة_${new Date().toLocaleDateString('ar-EG')}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-      };
-      html2pdf().set(opt).from(document.getElementById('invoiceContent')).save();
-    }, 1000);
   };
 </script>
 
