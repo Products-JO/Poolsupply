@@ -41,13 +41,23 @@
 
     .info {
       display: flex;
-      flex-direction: column;
+      flex-wrap: wrap;
       gap: 10px;
       margin-bottom: 15px;
+      align-items: center;
+    }
+
+    .info .field {
+      display: flex;
+      flex-direction: column;
+      width: auto;
+      min-width: 140px;
+      flex: 1;
     }
 
     label {
       font-weight: bold;
+      font-size: 13px;
     }
 
     input[type="text"], textarea {
@@ -64,7 +74,6 @@
       margin-top: 10px;
     }
 
-    /* تحديد عرض الأعمدة */
     th:nth-child(2), td:nth-child(2) {
       width: 40%;
     }
@@ -90,7 +99,7 @@
       text-align: center;
       vertical-align: middle;
       line-height: 1.1;
-      height: 32px; /* ← تقليل الارتفاع */
+      height: 32px;
     }
 
     td textarea {
@@ -100,7 +109,7 @@
       font-size: 12px;
       overflow: hidden;
       text-align: right;
-      height: 28px; /* ← ارتفاع ثابت */
+      height: 28px;
       padding: 2px;
     }
 
@@ -171,13 +180,17 @@
     <h2 contenteditable="true">فاتورة مبيعات</h2>
 
     <div class="info">
-      <div>
+      <div class="field">
         <label>اسم العميل:</label>
         <input type="text" placeholder="اسم العميل" />
       </div>
-      <div>
+      <div class="field">
         <label>رقم الفاتورة:</label>
-        <input type="text" placeholder="مثال: 001/2025" />
+        <input type="text" placeholder="001/2025" />
+      </div>
+      <div class="field">
+        <label>تاريخ الفاتورة:</label>
+        <input type="text" id="invoiceDate" readonly />
       </div>
     </div>
 
@@ -256,6 +269,11 @@
       button.closest("tr").remove();
       updateGrandTotal();
     }
+
+    window.onload = () => {
+      document.getElementById("invoiceDate").value = new Date().toLocaleDateString('ar-EG');
+      updateGrandTotal();
+    };
   </script>
 
 </body>
