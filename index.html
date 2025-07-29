@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>فاتورة مبيعات</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -14,11 +15,15 @@
       text-align: center;
     }
 
+    #invoiceContent {
+      background: white;
+      padding: 20px;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
-      background: white;
     }
 
     th, td {
@@ -49,7 +54,7 @@
       cursor: pointer;
     }
 
-    /* إخفاء الأزرار عند الطباعة */
+    /* إخفاء العناصر عند الطباعة */
     @media print {
       .no-print {
         display: none !important;
@@ -59,27 +64,29 @@
 </head>
 <body>
 
-  <h2>فاتورة مبيعات</h2>
+  <div id="invoiceContent">
+    <h2>فاتورة مبيعات</h2>
 
-  <table id="invoiceTable">
-    <thead>
-      <tr>
-        <th>رقم البند</th>
-        <th>البيان</th>
-        <th>الكمية</th>
-        <th>السعر</th>
-        <th>الإجمالي</th>
-        <th>حذف</th>
-      </tr>
-    </thead>
-    <tbody id="invoiceBody">
-      <!-- الصفوف تضاف تلقائيًا -->
-    </tbody>
-  </table>
+    <table id="invoiceTable">
+      <thead>
+        <tr>
+          <th>رقم البند</th>
+          <th>البيان</th>
+          <th>الكمية</th>
+          <th>السعر</th>
+          <th>الإجمالي</th>
+          <th class="no-print">حذف</th>
+        </tr>
+      </thead>
+      <tbody id="invoiceBody">
+        <!-- الصفوف تضاف تلقائيًا -->
+      </tbody>
+    </table>
+  </div>
 
-  <div class="buttons no-print">
+  <div class="buttons">
     <button onclick="addRow()">إضافة بند</button>
-    <button onclick="window.print()">طباعة</button>
+    <button onclick="savePDF()">حفظ</button>
   </div>
 
   <script>
@@ -95,7 +102,7 @@
         <td><input type="number" value="1" min="1" onchange="updateTotal(this)"></td>
         <td><input type="number" value="0" min="0" onchange="updateTotal(this)"></td>
         <td class="total">0</td>
-        <td><button onclick="deleteRow(this)">❌</button></td>
+        <td class="no-print"><button onclick="deleteRow(this)">❌</button></td>
       `;
     }
 
@@ -112,7 +119,31 @@
       row.remove();
     }
 
-    // أضف صف أول تلقائيًا عند الفتح
+    function savePDF() {
+      // نحول كل المدخلات لنصوص مؤقتًا قبل الحفظ
+      const inputs = document.querySelectorAll('#invoiceContent input');
+      inputs.forEach(input => {
+        const td = input.parentElement;
+        const text = document.createTextNode(input.value);
+        td.removeChild(input);
+        td.appendChild(text);
+      });
+
+      const element = document.getElementById('invoiceContent');
+      const opt = {
+        margin: 0.5,
+        filename: 'فاتورة.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+      };
+
+      html2pdf().set(opt).from(element).save().then(() => {
+        location.reload(); // إعادة تحميل الصفحة بعد الحفظ
+      });
+    }
+
+    // أضف صف أول تلقائيًا عند التحميل
     window.onload = () => addRow();
   </script>
 
