@@ -1,0 +1,218 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>فاتورة مبيعات</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 10px;
+      margin: 0;
+    }
+
+    #invoiceContent {
+      background: white;
+      padding: 15px;
+      max-width: 800px;
+      margin: auto;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+
+    h2[contenteditable] {
+      text-align: center;
+      margin-bottom: 20px;
+      border: 1px dashed transparent;
+      padding: 5px;
+      font-size: 20px;
+    }
+
+    h2[contenteditable]:hover {
+      border-color: #ccc;
+    }
+
+    .info {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    input[type="text"], textarea {
+      padding: 8px;
+      font-size: 14px;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: right;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px;
+      text-align: center;
+      vertical-align: top;
+    }
+
+    th {
+      background-color: #eee;
+      font-size: 14px;
+    }
+
+    td textarea {
+      width: 100%;
+      border: none;
+      resize: none;
+      font-size: 14px;
+      overflow: hidden;
+      text-align: right;
+      min-height: 40px;
+    }
+
+    .buttons {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 15px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .total-footer {
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 16px;
+      text-align: right;
+    }
+
+    .notes {
+      margin-top: 10px;
+    }
+
+    @media print {
+      .no-print {
+        display: none !important;
+      }
+      h2[contenteditable] {
+        border: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="invoiceContent">
+    <h2 contenteditable="true">فاتورة مبيعات</h2>
+
+    <div class="info">
+      <div>
+        <label>اسم العميل:</label>
+        <input type="text" placeholder="اسم العميل" />
+      </div>
+      <div>
+        <label>رقم الفاتورة:</label>
+        <input type="text" placeholder="مثال: 001/2025" />
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>رقم البند</th>
+          <th>البيان</th>
+          <th>الكمية</th>
+          <th>السعر</th>
+          <th>الإجمالي</th>
+          <th class="no-print">❌</th>
+        </tr>
+      </thead>
+      <tbody id="invoiceBody">
+        <!-- الصفوف تضاف تلقائيًا -->
+      </tbody>
+    </table>
+
+    <div class="total-footer">
+      المجموع الكلي: <span id="grandTotal">0.00</span> دينار
+    </div>
+
+    <div class="notes">
+      <label>ملاحظات:</label>
+      <textarea placeholder="ملاحظات الفاتورة..." rows="3"></textarea>
+    </div>
+  </div>
+
+  <div class="buttons no-print">
+    <button onclick="addRow()">إضافة بند</button>
+    <button onclick="window.print()">طباعة</button>
+  </div>
+
+  <script>
+    let counter = 1;
+
+    function addRow() {
+      const table = document.getElementById("invoiceBody");
+      const row = table.insertRow();
+
+      row.innerHTML = `
+        <td>${counter++}</td>
+        <td><textarea oninput="autoGrow(this)"></textarea></td>
+        <td><input type="number" value="1" min="1" onchange="updateTotal(this)"></td>
+        <td><input type="number" value="0" min="0" onchange="updateTotal(this)"></td>
+        <td class="total">0.00</td>
+        <td class="no-print"><button onclick="deleteRow(this)">❌</button></td>
+      `;
+
+      autoGrow(row.cells[1].querySelector("textarea"));
+      updateTotal(row.cells[2].querySelector("input"));
+    }
+
+    function autoGrow(textarea) {
+      textarea.style.height = "auto";
+      textarea.style.height = textarea.scrollHeight + "px";
+    }
+
+    function updateTotal(input) {
+      const row = input.closest("tr");
+      const qty = parseFloat(row.cells[2].querySelector("input").value) || 0;
+      const price = parseFloat(row.cells[3].querySelector("input").value) || 0;
+      row.cells[4].textContent = (qty * price).toFixed(2);
+      updateGrandTotal();
+    }
+
+    function updateGrandTotal() {
+      let total = 0;
+      document.querySelectorAll(".total").forEach((cell) => {
+        total += parseFloat(cell.textContent) || 0;
+      });
+      document.getElementById("grandTotal").textContent = total.toFixed(2);
+    }
+
+    function deleteRow(button) {
+      button.closest("tr").remove();
+      updateGrandTotal();
+    }
+
+    window.onload = () => addRow();
+  </script>
+
+</body>
+</html>
