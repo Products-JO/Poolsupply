@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>فاتورة</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+
+    h2[contenteditable] {
+      text-align: center;
+      outline: none;
+      border: 1px dashed transparent;
+      padding: 5px;
+    }
+
+    h2[contenteditable]:hover {
+      border-color: #ccc;
+    }
+
+    .info {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    input[type="text"], textarea {
+      padding: 5px;
+      font-size: 14px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    #invoiceContent {
+      background: white;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    th {
+      background-color: #eee;
+    }
+
+    textarea.auto-grow {
+      resize: none;
+      overflow: hidden;
+      min-height: 40px;
+    }
+
+    .buttons {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    button {
+      padding: 10px 15px;
+      margin: 5px;
+      font-size: 15px;
+      cursor: pointer;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      border-radius: 4px;
+    }
+
+    .total-footer, .notes {
+      margin-top: 20px;
+      font-size: 15px;
+      font-weight: bold;
+      padding: 10px;
+    }
+
+    @media print {
+      .no-print {
+        display: none !important;
+      }
+      h2[contenteditable] {
+        border: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="invoiceContent">
+    <h2 contenteditable="true">فاتورة مبيعات</h2>
+
+    <div class="info">
+      <div>
+        <label>اسم العميل:</label>
+        <input type="text" placeholder="اكتب اسم العميل هنا">
+      </div>
+      <div>
+        <label>رقم الفاتورة:</label>
+        <input type="text" placeholder="مثال: 001/2025">
+      </div>
+    </div>
+
+    <table id="invoiceTable">
+      <thead>
+        <tr>
+          <th>رقم البند</th>
+          <th>البيان</th>
+          <th>الكمية</th>
+          <th>السعر</th>
+          <th>الإجمالي</th>
+          <th class="no-print">حذف</th>
+        </tr>
+      </thead>
+      <tbody id="invoiceBody">
+        <!-- الصفوف تضاف تلقائيًا -->
+      </tbody>
+    </table>
+
+    <div class="total-footer">
+      المجموع الكلي: <span id="grandTotal">0.00</span> دينار
+    </div>
+
+    <div class="notes">
+      <label>ملاحظات:</label>
+      <textarea placeholder="اكتب الملاحظات هنا..." rows="3" class="auto-grow"></textarea>
+    </div>
+  </div>
+
+  <div class="buttons no-print">
+    <button onclick="addRow()">إضافة بند</button>
+    <button onclick="window.print()">طباعة</button>
+  </div>
+
+  <script>
+    let counter = 1;
+
+    function addRow(item = {}) {
+      const table = document.getElementById("invoiceBody");
+      const row = table.insertRow();
+
+      const البيان = item.name || "";
+      const qty = item.qty || 1;
+      const price = item.price || 0;
+
+      row.innerHTML = `
+        <td>${counter++}</td>
+        <td><textarea class="auto-grow" oninput="autoGrow(this); updateTotal(this)">${بيان}</textarea></td>
+        <td><input type="number" value="${qty}" min="1" onchange="updateTotal(this)"></td>
+        <td><input type="number" value="${price}" min="0" onchange="updateTotal(this)"></td>
+        <td class="total">0</td>
+        <td class="no-print"><button onclick="deleteRow(this)">❌</button></td>
+      `;
+
+      autoGrow(row.cells[1].querySelector('textarea'));
+      updateTotal(row.cells[2].querySelector('input'));
+    }
+
+    function autoGrow(textarea) {
+      textarea.style.height = "auto";
+      textarea.style.height = textarea.scrollHeight + "px";
+    }
+
+    function updateTotal(input) {
+      const row = input.closest('tr');
+      const qty = parseFloat(row.cells[2].querySelector('input').value) || 0;
+      const price = parseFloat(row.cells[3].querySelector('input').value) || 0;
+      row.cells[4].textContent = (qty * price).toFixed(2);
+      updateGrandTotal();
+    }
+
+    function updateGrandTotal() {
+      let total = 0;
+      document.querySelectorAll('.total').forEach(cell => {
+        total += parseFloat(cell.textContent) || 0;
+      });
+      document.getElementById('grandTotal').textContent = total.toFixed(2);
+    }
+
+    function deleteRow(button) {
+      button.closest('tr').remove();
+      updateGrandTotal();
+    }
+
+    window.onload = () => addRow();
+  </script>
+
+</body>
+</html>
