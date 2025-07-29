@@ -1,19 +1,30 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>فاتورة</title>
   <style>
     body {
       font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
       padding: 20px;
-      background-color: #f9f9f9;
+      direction: rtl;
+      text-align: right;
+    }
+
+    #invoiceContent {
+      background: white;
+      padding: 20px;
+      border-radius: 5px;
+      max-width: 800px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
     h2[contenteditable] {
       text-align: center;
-      outline: none;
+      margin-bottom: 20px;
       border: 1px dashed transparent;
       padding: 5px;
     }
@@ -31,19 +42,16 @@
 
     label {
       font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
     }
 
     input[type="text"], textarea {
-      padding: 5px;
-      font-size: 14px;
+      padding: 8px;
+      font-size: 15px;
       width: 100%;
       box-sizing: border-box;
-    }
-
-    #invoiceContent {
-      background: white;
-      padding: 10px;
-      border-radius: 5px;
+      text-align: right;
     }
 
     table {
@@ -57,6 +65,7 @@
       padding: 8px;
       text-align: center;
       font-size: 14px;
+      vertical-align: top;
     }
 
     th {
@@ -67,11 +76,12 @@
       resize: none;
       overflow: hidden;
       min-height: 40px;
+      width: 100%;
     }
 
     .buttons {
       text-align: center;
-      margin-top: 15px;
+      margin-top: 20px;
     }
 
     button {
@@ -89,7 +99,10 @@
       margin-top: 20px;
       font-size: 15px;
       font-weight: bold;
-      padding: 10px;
+    }
+
+    .notes textarea {
+      font-weight: normal;
     }
 
     @media print {
@@ -110,7 +123,7 @@
     <div class="info">
       <div>
         <label>اسم العميل:</label>
-        <input type="text" placeholder="اكتب اسم العميل هنا">
+        <input type="text" placeholder="اسم العميل">
       </div>
       <div>
         <label>رقم الفاتورة:</label>
@@ -140,7 +153,7 @@
 
     <div class="notes">
       <label>ملاحظات:</label>
-      <textarea placeholder="اكتب الملاحظات هنا..." rows="3" class="auto-grow"></textarea>
+      <textarea placeholder="ملاحظات الفاتورة..." rows="3" class="auto-grow"></textarea>
     </div>
   </div>
 
@@ -152,20 +165,16 @@
   <script>
     let counter = 1;
 
-    function addRow(item = {}) {
+    function addRow() {
       const table = document.getElementById("invoiceBody");
       const row = table.insertRow();
 
-      const البيان = item.name || "";
-      const qty = item.qty || 1;
-      const price = item.price || 0;
-
       row.innerHTML = `
         <td>${counter++}</td>
-        <td><textarea class="auto-grow" oninput="autoGrow(this); updateTotal(this)">${بيان}</textarea></td>
-        <td><input type="number" value="${qty}" min="1" onchange="updateTotal(this)"></td>
-        <td><input type="number" value="${price}" min="0" onchange="updateTotal(this)"></td>
-        <td class="total">0</td>
+        <td><textarea class="auto-grow" oninput="autoGrow(this)"></textarea></td>
+        <td><input type="number" value="1" min="1" onchange="updateTotal(this)"></td>
+        <td><input type="number" value="0" min="0" onchange="updateTotal(this)"></td>
+        <td class="total">0.00</td>
         <td class="no-print"><button onclick="deleteRow(this)">❌</button></td>
       `;
 
