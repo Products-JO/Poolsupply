@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>فاتورة مبيعات</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
-      padding: 30px;
+      padding: 20px;
+      margin: 0;
       background-color: #f9f9f9;
     }
 
@@ -17,19 +18,21 @@
 
     #invoiceContent {
       background: white;
-      padding: 20px;
+      padding: 10px;
+      border-radius: 5px;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
+      margin-top: 15px;
     }
 
     th, td {
       border: 1px solid #ccc;
-      padding: 10px;
+      padding: 8px;
       text-align: center;
+      font-size: 14px;
     }
 
     th {
@@ -40,24 +43,52 @@
       width: 100%;
       box-sizing: border-box;
       text-align: center;
+      font-size: 14px;
     }
 
     .buttons {
-      margin-top: 20px;
       text-align: center;
+      margin-top: 15px;
     }
 
     button {
-      padding: 10px 20px;
+      padding: 10px 15px;
       margin: 5px;
-      font-size: 16px;
+      font-size: 15px;
       cursor: pointer;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      border-radius: 4px;
+    }
+
+    .total-footer {
+      margin-top: 20px;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: left;
+      padding: 10px;
     }
 
     /* إخفاء العناصر عند الطباعة */
     @media print {
       .no-print {
         display: none !important;
+      }
+    }
+
+    /* تحسين العرض على الموبايل */
+    @media (max-width: 600px) {
+      th, td {
+        font-size: 12px;
+        padding: 6px;
+      }
+      input {
+        font-size: 12px;
+      }
+      button {
+        font-size: 13px;
+        padding: 8px 10px;
       }
     }
   </style>
@@ -82,11 +113,15 @@
         <!-- الصفوف تضاف تلقائيًا -->
       </tbody>
     </table>
+
+    <div class="total-footer">
+      المجموع الكلي: <span id="grandTotal">0.00</span> دينار
+    </div>
   </div>
 
-  <div class="buttons">
+  <div class="buttons no-print">
     <button onclick="addRow()">إضافة بند</button>
-    <button onclick="savePDF()">حفظ</button>
+    <button onclick="window.print()">طباعة</button>
   </div>
 
   <script>
@@ -104,6 +139,8 @@
         <td class="total">0</td>
         <td class="no-print"><button onclick="deleteRow(this)">❌</button></td>
       `;
+
+      updateGrandTotal(); // يحدث المجموع العام عند الإضافة
     }
 
     function updateTotal(input) {
@@ -112,35 +149,22 @@
       const price = parseFloat(row.cells[3].querySelector('input').value) || 0;
       const total = quantity * price;
       row.cells[4].textContent = total.toFixed(2);
+      updateGrandTotal();
     }
 
     function deleteRow(button) {
       const row = button.closest('tr');
       row.remove();
+      updateGrandTotal();
     }
 
-    function savePDF() {
-      // نحول كل المدخلات لنصوص مؤقتًا قبل الحفظ
-      const inputs = document.querySelectorAll('#invoiceContent input');
-      inputs.forEach(input => {
-        const td = input.parentElement;
-        const text = document.createTextNode(input.value);
-        td.removeChild(input);
-        td.appendChild(text);
+    function updateGrandTotal() {
+      const totals = document.querySelectorAll('.total');
+      let grand = 0;
+      totals.forEach(cell => {
+        grand += parseFloat(cell.textContent) || 0;
       });
-
-      const element = document.getElementById('invoiceContent');
-      const opt = {
-        margin: 0.5,
-        filename: 'فاتورة.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-      };
-
-      html2pdf().set(opt).from(element).save().then(() => {
-        location.reload(); // إعادة تحميل الصفحة بعد الحفظ
-      });
+      document.getElementById('grandTotal').textContent = grand.toFixed(2);
     }
 
     // أضف صف أول تلقائيًا عند التحميل
