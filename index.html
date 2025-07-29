@@ -122,15 +122,8 @@
       tr {
         page-break-inside: avoid !important;
       }
-      #discountAmountWrapper,
-      #discountPercentWrapper {
+      #discountAmount, #discountPercent {
         display: none !important;
-      }
-      .discount-show-amount #discountAmountWrapper {
-        display: block !important;
-      }
-      .discount-show-percent #discountPercentWrapper {
-        display: block !important;
       }
     }
   </style>
@@ -174,16 +167,17 @@
         <td class="total">0.00</td>
         <td class="no-print"><button onclick="deleteRow(this)">❌</button></td>
       </tr>
+      <!-- بند الخصم (مخفي ويظهر عند الطباعة فقط إذا وُجد خصم) -->
+      <tr id="discountRow" style="display: none;">
+        <td colspan="4" style="text-align:right; font-weight:bold;">قيمة الخصم</td>
+        <td colspan="2" id="discountValue" style="font-weight:bold;"></td>
+      </tr>
     </tbody>
   </table>
 
   <div class="discounts">
-    <div id="discountAmountWrapper">
-      <input type="number" id="discountAmount" placeholder="خصم مبلغ (دينار)" style="width:160px;" oninput="updateGrandTotal()"/>
-    </div>
-    <div id="discountPercentWrapper">
-      <input type="number" id="discountPercent" placeholder="خصم (%)" style="width:160px;" oninput="updateGrandTotal()"/>
-    </div>
+    <input type="number" id="discountAmount" placeholder="خصم مبلغ (دينار)" style="width:160px;" oninput="updateGrandTotal()"/>
+    <input type="number" id="discountPercent" placeholder="خصم (%)" style="width:160px;" oninput="updateGrandTotal()"/>
   </div>
 
   <div class="total-footer">
@@ -207,7 +201,7 @@
 
   function addRow(){
     const table = document.getElementById("invoiceBody");
-    const row = table.insertRow();
+    const row = table.insertRow(document.getElementById("invoiceBody").rows.length - 1);
     row.innerHTML = `
       <td>${counter++}</td>
       <td><textarea></textarea></td>
@@ -232,19 +226,21 @@
 
     const amount = parseFloat(document.getElementById("discountAmount").value) || 0;
     const percent = parseFloat(document.getElementById("discountPercent").value) || 0;
+    const discountRow = document.getElementById("discountRow");
+    const discountValue = document.getElementById("discountValue");
 
     let final = total;
 
     if (amount > 0) {
       final -= amount;
-      document.body.classList.add("discount-show-amount");
-      document.body.classList.remove("discount-show-percent");
+      discountRow.style.display = "table-row";
+      discountValue.textContent = `${amount.toFixed(2)} د.أ`;
     } else if (percent > 0) {
       final -= (total * percent / 100);
-      document.body.classList.add("discount-show-percent");
-      document.body.classList.remove("discount-show-amount");
+      discountRow.style.display = "table-row";
+      discountValue.textContent = `${percent}%`;
     } else {
-      document.body.classList.remove("discount-show-amount", "discount-show-percent");
+      discountRow.style.display = "none";
     }
 
     final = final < 0 ? 0 : final;
