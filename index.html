@@ -1,25 +1,25 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>فاتورة</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>فاتورة مبيعات</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background-color: #f4f4f4;
-      padding: 20px;
-      direction: rtl;
-      text-align: right;
+      padding: 10px;
+      margin: 0;
     }
 
     #invoiceContent {
       background: white;
-      padding: 20px;
-      border-radius: 5px;
+      padding: 15px;
       max-width: 800px;
       margin: auto;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
     }
 
     h2[contenteditable] {
@@ -27,6 +27,7 @@
       margin-bottom: 20px;
       border: 1px dashed transparent;
       padding: 5px;
+      font-size: 20px;
     }
 
     h2[contenteditable]:hover {
@@ -42,13 +43,11 @@
 
     label {
       font-weight: bold;
-      display: block;
-      margin-bottom: 5px;
     }
 
     input[type="text"], textarea {
       padding: 8px;
-      font-size: 15px;
+      font-size: 14px;
       width: 100%;
       box-sizing: border-box;
       text-align: right;
@@ -57,52 +56,56 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 15px;
+      margin-top: 10px;
     }
 
     th, td {
       border: 1px solid #ccc;
-      padding: 8px;
+      padding: 6px;
       text-align: center;
-      font-size: 14px;
       vertical-align: top;
     }
 
     th {
       background-color: #eee;
+      font-size: 14px;
     }
 
-    textarea.auto-grow {
-      resize: none;
-      overflow: hidden;
-      min-height: 40px;
+    td textarea {
       width: 100%;
+      border: none;
+      resize: none;
+      font-size: 14px;
+      overflow: hidden;
+      text-align: right;
+      min-height: 40px;
     }
 
     .buttons {
       text-align: center;
-      margin-top: 20px;
+      margin-top: 15px;
     }
 
     button {
-      padding: 10px 15px;
+      padding: 10px 20px;
       margin: 5px;
       font-size: 15px;
-      cursor: pointer;
-      border: none;
-      background-color: #4CAF50;
+      background-color: #28a745;
       color: white;
-      border-radius: 4px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
     }
 
-    .total-footer, .notes {
-      margin-top: 20px;
-      font-size: 15px;
+    .total-footer {
+      margin-top: 15px;
       font-weight: bold;
+      font-size: 16px;
+      text-align: right;
     }
 
-    .notes textarea {
-      font-weight: normal;
+    .notes {
+      margin-top: 10px;
     }
 
     @media print {
@@ -123,15 +126,15 @@
     <div class="info">
       <div>
         <label>اسم العميل:</label>
-        <input type="text" placeholder="اسم العميل">
+        <input type="text" placeholder="اسم العميل" />
       </div>
       <div>
         <label>رقم الفاتورة:</label>
-        <input type="text" placeholder="مثال: 001/2025">
+        <input type="text" placeholder="مثال: 001/2025" />
       </div>
     </div>
 
-    <table id="invoiceTable">
+    <table>
       <thead>
         <tr>
           <th>رقم البند</th>
@@ -139,7 +142,7 @@
           <th>الكمية</th>
           <th>السعر</th>
           <th>الإجمالي</th>
-          <th class="no-print">حذف</th>
+          <th class="no-print">❌</th>
         </tr>
       </thead>
       <tbody id="invoiceBody">
@@ -153,7 +156,7 @@
 
     <div class="notes">
       <label>ملاحظات:</label>
-      <textarea placeholder="ملاحظات الفاتورة..." rows="3" class="auto-grow"></textarea>
+      <textarea placeholder="ملاحظات الفاتورة..." rows="3"></textarea>
     </div>
   </div>
 
@@ -171,15 +174,15 @@
 
       row.innerHTML = `
         <td>${counter++}</td>
-        <td><textarea class="auto-grow" oninput="autoGrow(this)"></textarea></td>
+        <td><textarea oninput="autoGrow(this)"></textarea></td>
         <td><input type="number" value="1" min="1" onchange="updateTotal(this)"></td>
         <td><input type="number" value="0" min="0" onchange="updateTotal(this)"></td>
         <td class="total">0.00</td>
         <td class="no-print"><button onclick="deleteRow(this)">❌</button></td>
       `;
 
-      autoGrow(row.cells[1].querySelector('textarea'));
-      updateTotal(row.cells[2].querySelector('input'));
+      autoGrow(row.cells[1].querySelector("textarea"));
+      updateTotal(row.cells[2].querySelector("input"));
     }
 
     function autoGrow(textarea) {
@@ -188,23 +191,23 @@
     }
 
     function updateTotal(input) {
-      const row = input.closest('tr');
-      const qty = parseFloat(row.cells[2].querySelector('input').value) || 0;
-      const price = parseFloat(row.cells[3].querySelector('input').value) || 0;
+      const row = input.closest("tr");
+      const qty = parseFloat(row.cells[2].querySelector("input").value) || 0;
+      const price = parseFloat(row.cells[3].querySelector("input").value) || 0;
       row.cells[4].textContent = (qty * price).toFixed(2);
       updateGrandTotal();
     }
 
     function updateGrandTotal() {
       let total = 0;
-      document.querySelectorAll('.total').forEach(cell => {
+      document.querySelectorAll(".total").forEach((cell) => {
         total += parseFloat(cell.textContent) || 0;
       });
-      document.getElementById('grandTotal').textContent = total.toFixed(2);
+      document.getElementById("grandTotal").textContent = total.toFixed(2);
     }
 
     function deleteRow(button) {
-      button.closest('tr').remove();
+      button.closest("tr").remove();
       updateGrandTotal();
     }
 
