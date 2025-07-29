@@ -70,13 +70,11 @@
       line-height: 1.1;
       height: 32px;
     }
-    textarea {
-      border: none;
-      resize: none;
-      font-size: 12px;
-      overflow: hidden;
-      text-align: right;
+    td textarea {
       height: 28px;
+      resize: none;
+      border: none;
+      font-size: 12px;
       padding: 2px;
     }
     input[type="number"] {
@@ -89,13 +87,13 @@
       margin-top: 15px;
     }
     button {
-      padding: 8px 15px;
-      margin: 5px;
-      font-size: 14px;
+      padding: 8px 12px;
+      margin: 3px;
+      font-size: 13px;
       background: #28a745;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 4px;
       cursor: pointer;
     }
     .discounts {
@@ -103,8 +101,14 @@
       display: flex;
       gap: 10px;
     }
+    .discount-label {
+      font-size: 14px;
+      font-weight: bold;
+      text-align: right;
+      margin-top: 10px;
+    }
     .total-footer {
-      margin-top: 15px;
+      margin-top: 10px;
       text-align: right;
       font-size: 14px;
     }
@@ -112,6 +116,12 @@
       font-weight: bold;
       color: green;
     }
+    .no-print .tools {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+    }
+
     @media print {
       .no-print {
         display: none !important;
@@ -119,10 +129,11 @@
       h2[contenteditable] {
         border: none !important;
       }
-      tr {
-        page-break-inside: avoid !important;
-      }
       #discountAmount, #discountPercent {
+        display: none !important;
+      }
+      th:last-child,
+      td:last-child {
         display: none !important;
       }
     }
@@ -155,7 +166,7 @@
         <th>الكمية</th>
         <th>السعر</th>
         <th>الإجمالي</th>
-        <th class="no-print">❌</th>
+        <th class="no-print">تحكم</th>
       </tr>
     </thead>
     <tbody id="invoiceBody">
@@ -165,20 +176,21 @@
         <td><input type="number" value="1" min="1" onchange="updateTotal(this)"/></td>
         <td><input type="number" value="0" min="0" onchange="updateTotal(this)"/></td>
         <td class="total">0.00</td>
-        <td class="no-print"><button onclick="deleteRow(this)">❌</button></td>
-      </tr>
-      <!-- بند الخصم (مخفي ويظهر عند الطباعة فقط إذا وُجد خصم) -->
-      <tr id="discountRow" style="display: none;">
-        <td colspan="4" style="text-align:right; font-weight:bold;">قيمة الخصم</td>
-        <td colspan="2" id="discountValue" style="font-weight:bold;"></td>
+        <td class="no-print tools">
+          <button onclick="moveRow(this, -1)">↑</button>
+          <button onclick="moveRow(this, 1)">↓</button>
+          <button onclick="deleteRow(this)">❌</button>
+        </td>
       </tr>
     </tbody>
   </table>
 
-  <div class="discounts">
+  <div class="discounts no-print">
     <input type="number" id="discountAmount" placeholder="خصم مبلغ (دينار)" style="width:160px;" oninput="updateGrandTotal()"/>
     <input type="number" id="discountPercent" placeholder="خصم (%)" style="width:160px;" oninput="updateGrandTotal()"/>
   </div>
+
+  <div id="discountText" class="discount-label" style="display: none;"></div>
 
   <div class="total-footer">
     المجموع الكلي: <span id="grandTotal">0.00</span> د.أ<br>
@@ -197,18 +209,21 @@
 </div>
 
 <script>
-  let counter = 2;
-
   function addRow(){
     const table = document.getElementById("invoiceBody");
-    const row = table.insertRow(document.getElementById("invoiceBody").rows.length - 1);
+    const row = table.insertRow();
     row.innerHTML = `
-      <td>${counter++}</td>
+      <td></td>
       <td><textarea></textarea></td>
       <td><input type="number" value="1" min="1" onchange="updateTotal(this)"/></td>
       <td><input type="number" value="0" min="0" onchange="updateTotal(this)"/></td>
       <td class="total">0.00</td>
-      <td class="no-print"><button onclick="deleteRow(this)">❌</button></td>`;
+      <td class="no-print tools">
+        <button onclick="moveRow(this, -1)">↑</button>
+        <button onclick="moveRow(this, 1)">↓</button>
+        <button onclick="deleteRow(this)">❌</button>
+      </td>`;
+    reNumberRows();
   }
 
   function updateTotal(input){
@@ -226,21 +241,25 @@
 
     const amount = parseFloat(document.getElementById("discountAmount").value) || 0;
     const percent = parseFloat(document.getElementById("discountPercent").value) || 0;
-    const discountRow = document.getElementById("discountRow");
-    const discountValue = document.getElementById("discountValue");
+    const discountText = document.getElementById("discountText");
 
     let final = total;
+    let discountLabel = "";
 
     if (amount > 0) {
       final -= amount;
-      discountRow.style.display = "table-row";
-      discountValue.textContent = `${amount.toFixed(2)} د.أ`;
+      discountLabel = `قيمة الخصم: ${amount.toFixed(2)} د.أ`;
     } else if (percent > 0) {
-      final -= (total * percent / 100);
-      discountRow.style.display = "table-row";
-      discountValue.textContent = `${percent}%`;
+      const disc = (total * percent / 100);
+      final -= disc;
+      discountLabel = `قيمة الخصم: ${percent}%`;
+    }
+
+    if (discountLabel) {
+      discountText.style.display = "block";
+      discountText.textContent = discountLabel;
     } else {
-      discountRow.style.display = "none";
+      discountText.style.display = "none";
     }
 
     final = final < 0 ? 0 : final;
@@ -249,7 +268,28 @@
 
   function deleteRow(button){
     button.closest("tr").remove();
+    reNumberRows();
     updateGrandTotal();
+  }
+
+  function reNumberRows(){
+    const rows = document.querySelectorAll("#invoiceBody tr");
+    rows.forEach((row, index) => {
+      row.cells[0].textContent = index + 1;
+    });
+  }
+
+  function moveRow(button, direction){
+    const row = button.closest("tr");
+    const table = document.getElementById("invoiceBody");
+    const index = Array.from(table.rows).indexOf(row);
+    const targetIndex = index + direction;
+
+    if (targetIndex >= 0 && targetIndex < table.rows.length) {
+      const targetRow = table.rows[targetIndex];
+      table.insertBefore(row, direction === 1 ? targetRow.nextSibling : targetRow);
+      reNumberRows();
+    }
   }
 
   window.onload = () => {
