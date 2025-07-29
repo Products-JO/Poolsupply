@@ -143,6 +143,7 @@
       .no-print {
         display: none !important;
       }
+
       h2[contenteditable] {
         border: none !important;
       }
@@ -157,6 +158,10 @@
         border: none;
         padding: 0;
         margin: 0;
+      }
+
+      tr {
+        page-break-inside: avoid; /* ✅ يمنع تقسيم الصف بين صفحتين */
       }
     }
   </style>
