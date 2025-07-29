@@ -76,6 +76,25 @@
       font-size: 14px;
     }
 
+    /* تخصيص عرض الأعمدة */
+    th:nth-child(2), td:nth-child(2) {
+      width: 40%;
+    }
+
+    th:nth-child(1), td:nth-child(1) {
+      width: 10%;
+    }
+
+    th:nth-child(3), td:nth-child(3),
+    th:nth-child(4), td:nth-child(4),
+    th:nth-child(5), td:nth-child(5) {
+      width: 12%;
+    }
+
+    th:nth-child(6), td:nth-child(6) {
+      width: 8%;
+    }
+
     td textarea {
       width: 100%;
       border: none;
@@ -84,6 +103,8 @@
       overflow: hidden;
       text-align: right;
       min-height: 40px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
     }
 
     td input[type="number"] {
@@ -148,7 +169,7 @@
     <table>
       <thead>
         <tr>
-          <th>رقم البند</th>
+          <th>رقم</th>
           <th>البيان</th>
           <th>الكمية</th>
           <th>السعر</th>
@@ -191,7 +212,7 @@
       const row = table.insertRow();
 
       row.innerHTML = `
-        <td></td>
+        <td>${counter++}</td>
         <td><textarea oninput="autoGrow(this)"></textarea></td>
         <td><input type="number" value="1" min="1" onchange="updateTotal(this)"></td>
         <td><input type="number" value="0" min="0" onchange="updateTotal(this)"></td>
@@ -230,5 +251,4 @@
   </script>
 
 </body>
-</html>
 </html>
