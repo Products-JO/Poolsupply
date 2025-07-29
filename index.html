@@ -51,8 +51,8 @@
     }
 
     input[type="text"], textarea {
-      padding: 8px;
-      font-size: 14px;
+      padding: 6px;
+      font-size: 13px;
       width: 100%;
       box-sizing: border-box;
       text-align: right;
@@ -85,29 +85,28 @@
 
     th, td {
       border: 1px solid #ccc;
-      padding: 3px;
+      padding: 3px 2px;
       font-size: 12px;
       text-align: center;
       vertical-align: middle;
-      line-height: 1.2;
+      line-height: 1.1;
+      height: 32px; /* ← تقليل الارتفاع */
     }
 
     td textarea {
       width: 100%;
       border: none;
-      resize: vertical;
+      resize: none;
       font-size: 12px;
       overflow: hidden;
       text-align: right;
-      min-height: 28px;
+      height: 28px; /* ← ارتفاع ثابت */
       padding: 2px;
-      white-space: pre-wrap;
-      word-wrap: break-word;
     }
 
     td input[type="number"] {
       width: 100%;
-      padding: 4px;
+      padding: 3px;
       text-align: center;
       font-size: 12px;
     }
@@ -118,9 +117,9 @@
     }
 
     button {
-      padding: 10px 20px;
+      padding: 8px 15px;
       margin: 5px;
-      font-size: 15px;
+      font-size: 14px;
       background-color: #28a745;
       color: white;
       border: none;
@@ -161,7 +160,7 @@
       }
 
       tr {
-        page-break-inside: avoid; /* ✅ يمنع تقسيم الصف بين صفحتين */
+        page-break-inside: avoid !important;
       }
     }
   </style>
@@ -196,7 +195,7 @@
       <tbody id="invoiceBody">
         <tr>
           <td>1</td>
-          <td><textarea oninput="autoGrow(this)"></textarea></td>
+          <td><textarea></textarea></td>
           <td><input type="number" value="1" min="1" onchange="updateTotal(this)"></td>
           <td><input type="number" value="0" min="0" onchange="updateTotal(this)"></td>
           <td class="total">0.00</td>
@@ -211,7 +210,7 @@
 
     <div class="notes">
       <label>ملاحظات:</label>
-      <textarea placeholder="ملاحظات الفاتورة..." rows="3" style="font-size:12px;"></textarea>
+      <textarea placeholder="ملاحظات الفاتورة..." rows="2" style="font-size:12px;"></textarea>
     </div>
   </div>
 
@@ -229,19 +228,12 @@
 
       row.innerHTML = `
         <td>${counter++}</td>
-        <td><textarea oninput="autoGrow(this)"></textarea></td>
+        <td><textarea></textarea></td>
         <td><input type="number" value="1" min="1" onchange="updateTotal(this)"></td>
         <td><input type="number" value="0" min="0" onchange="updateTotal(this)"></td>
         <td class="total">0.00</td>
         <td class="no-print"><button onclick="deleteRow(this)">❌</button></td>
       `;
-
-      autoGrow(row.cells[1].querySelector("textarea"));
-    }
-
-    function autoGrow(textarea) {
-      textarea.style.height = "auto";
-      textarea.style.height = textarea.scrollHeight + "px";
     }
 
     function updateTotal(input) {
