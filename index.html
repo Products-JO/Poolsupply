@@ -8,7 +8,6 @@
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
-      margin: 0;
       background-color: #f9f9f9;
     }
 
@@ -70,25 +69,9 @@
       padding: 10px;
     }
 
-    /* إخفاء العناصر عند الطباعة */
     @media print {
       .no-print {
         display: none !important;
-      }
-    }
-
-    /* تحسين العرض على الموبايل */
-    @media (max-width: 600px) {
-      th, td {
-        font-size: 12px;
-        padding: 6px;
-      }
-      input {
-        font-size: 12px;
-      }
-      button {
-        font-size: 13px;
-        padding: 8px 10px;
       }
     }
   </style>
@@ -127,20 +110,20 @@
   <script>
     let counter = 1;
 
-    function addRow() {
+    function addRow(item = {}) {
       const table = document.getElementById("invoiceBody");
       const row = table.insertRow();
 
       row.innerHTML = `
         <td>${counter++}</td>
-        <td><input type="text" placeholder="البيان"></td>
-        <td><input type="number" value="1" min="1" onchange="updateTotal(this)"></td>
-        <td><input type="number" value="0" min="0" onchange="updateTotal(this)"></td>
+        <td><input type="text" value="${item.name || ''}" oninput="saveInvoice(); updateTotal(this)"></td>
+        <td><input type="number" value="${item.qty || 1}" min="1" onchange="saveInvoice(); updateTotal(this)"></td>
+        <td><input type="number" value="${item.price || 0}" min="0" onchange="saveInvoice(); updateTotal(this)"></td>
         <td class="total">0</td>
         <td class="no-print"><button onclick="deleteRow(this)">❌</button></td>
       `;
 
-      updateGrandTotal(); // يحدث المجموع العام عند الإضافة
+      updateTotal(row.cells[2].querySelector('input'));
     }
 
     function updateTotal(input) {
@@ -150,12 +133,14 @@
       const total = quantity * price;
       row.cells[4].textContent = total.toFixed(2);
       updateGrandTotal();
+      saveInvoice();
     }
 
     function deleteRow(button) {
       const row = button.closest('tr');
       row.remove();
       updateGrandTotal();
+      saveInvoice();
     }
 
     function updateGrandTotal() {
@@ -167,8 +152,28 @@
       document.getElementById('grandTotal').textContent = grand.toFixed(2);
     }
 
-    // أضف صف أول تلقائيًا عند التحميل
-    window.onload = () => addRow();
+    function saveInvoice() {
+      const rows = document.querySelectorAll('#invoiceBody tr');
+      const data = [];
+      rows.forEach(row => {
+        const name = row.cells[1].querySelector('input').value;
+        const qty = parseFloat(row.cells[2].querySelector('input').value) || 0;
+        const price = parseFloat(row.cells[3].querySelector('input').value) || 0;
+        data.push({ name, qty, price });
+      });
+      localStorage.setItem('savedInvoice', JSON.stringify(data));
+    }
+
+    function loadInvoice() {
+      const data = JSON.parse(localStorage.getItem('savedInvoice') || '[]');
+      if (data.length === 0) {
+        addRow(); // صف أولي
+      } else {
+        data.forEach(item => addRow(item));
+      }
+    }
+
+    window.onload = loadInvoice;
   </script>
 
 </body>
