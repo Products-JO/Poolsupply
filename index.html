@@ -1,85 +1,76 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>فاتورة مبيعات</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
+      font-family: Arial;
+      direction: rtl;
+      background: #f4f4f4;
       padding: 10px;
       margin: 0;
-      direction: rtl;
     }
-
     #invoiceContent {
       background: white;
-      padding: 15px;
       max-width: 800px;
       margin: auto;
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
       border-radius: 8px;
     }
-
     h2[contenteditable] {
       text-align: center;
       margin-bottom: 20px;
+      font-size: 20px;
       border: 1px dashed transparent;
       padding: 5px;
-      font-size: 20px;
     }
-
     h2[contenteditable]:hover {
       border-color: #ccc;
     }
-
     .info {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       margin-bottom: 15px;
     }
-
-    .info .field {
+    .field {
+      flex: 1;
+      min-width: 140px;
       display: flex;
       flex-direction: column;
-      width: auto;
-      min-width: 140px;
-      flex: 1;
     }
-
     label {
       font-weight: bold;
       font-size: 13px;
     }
-
-    input[type="text"], input[type="number"], textarea {
+    input, textarea {
       padding: 6px;
       font-size: 13px;
       width: 100%;
       box-sizing: border-box;
       text-align: right;
     }
-
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 10px;
     }
-
+    th:nth-child(2), td:nth-child(2) {
+      width: 40%;
+    }
     th, td {
       border: 1px solid #ccc;
-      padding: 4px;
+      padding: 3px 2px;
       font-size: 12px;
       text-align: center;
       vertical-align: middle;
-      line-height: 1.2;
+      line-height: 1.1;
       height: 32px;
     }
-
-    td textarea {
-      width: 100%;
+    textarea {
       border: none;
       resize: none;
       font-size: 12px;
@@ -88,195 +79,202 @@
       height: 28px;
       padding: 2px;
     }
-
-    td input[type="number"] {
-      width: 100%;
+    input[type="number"] {
+      font-size: 12px;
       padding: 3px;
       text-align: center;
-      font-size: 12px;
     }
-
     .buttons {
       text-align: center;
       margin-top: 15px;
     }
-
     button {
       padding: 8px 15px;
       margin: 5px;
       font-size: 14px;
-      background-color: #28a745;
+      background: #28a745;
       color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
     }
-
     .discounts {
       margin-top: 10px;
+      display: flex;
+      gap: 10px;
     }
-
-    .discounts input {
-      font-size: 13px;
-    }
-
     .total-footer {
       margin-top: 15px;
-      font-size: 14px;
       text-align: right;
+      font-size: 14px;
     }
-
     #finalTotal {
       font-weight: bold;
       color: green;
     }
-
     @media print {
       .no-print {
         display: none !important;
       }
-
       h2[contenteditable] {
         border: none !important;
       }
-
       tr {
         page-break-inside: avoid !important;
+      }
+      #discountAmountWrapper,
+      #discountPercentWrapper {
+        display: none !important;
+      }
+      .discount-show-amount #discountAmountWrapper {
+        display: block !important;
+      }
+      .discount-show-percent #discountPercentWrapper {
+        display: block !important;
       }
     }
   </style>
 </head>
 <body>
 
-  <div id="invoiceContent">
-    <h2 contenteditable="true">فاتورة مبيعات</h2>
-
-    <div class="info">
-      <div class="field">
-        <label>اسم العميل:</label>
-        <input type="text" placeholder="اسم العميل" />
-      </div>
-      <div class="field">
-        <label>رقم الفاتورة:</label>
-        <input type="text" placeholder="001/2025" />
-      </div>
-      <div class="field">
-        <label>تاريخ الفاتورة:</label>
-        <input type="text" id="invoiceDate" readonly />
-      </div>
+<div id="invoiceContent">
+  <h2 contenteditable="true">فاتورة مبيعات</h2>
+  <div class="info">
+    <div class="field">
+      <label>اسم العميل:</label>
+      <input type="text" placeholder="اسم العميل"/>
     </div>
-
-    <table>
-      <thead>
-        <tr>
-          <th>رقم</th>
-          <th>البيان</th>
-          <th>الكمية</th>
-          <th>السعر</th>
-          <th>الإجمالي</th>
-          <th class="no-print">❌</th>
-        </tr>
-      </thead>
-      <tbody id="invoiceBody">
-        <tr>
-          <td>1</td>
-          <td><textarea></textarea></td>
-          <td><input type="number" value="1" min="1" onchange="updateTotal(this)"></td>
-          <td><input type="number" value="0" min="0" onchange="updateTotal(this)"></td>
-          <td class="total">0.00</td>
-          <td class="no-print"><button onclick="deleteRow(this)">❌</button></td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="discounts">
-      <label>الخصم:</label>
-      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-        <input type="number" id="discountAmount" placeholder="خصم بالمبلغ (دينار)" style="width: 160px;" oninput="updateGrandTotal()" />
-        <input type="number" id="discountPercent" placeholder="خصم بالنسبة (%)" style="width: 160px;" oninput="updateGrandTotal()" />
-      </div>
+    <div class="field">
+      <label>رقم الفاتورة:</label>
+      <input type="text" placeholder="001/2025"/>
     </div>
-
-    <div class="total-footer">
-      المجموع الكلي: <span id="grandTotal">0.00</span> دينار<br>
-      <span style="font-weight: normal;">الإجمالي بعد الخصم:</span>
-      <span id="finalTotal">0.00</span> دينار
-    </div>
-
-    <div class="notes">
-      <label>ملاحظات:</label>
-      <textarea placeholder="ملاحظات الفاتورة..." rows="2" style="font-size:12px;"></textarea>
+    <div class="field">
+      <label>تاريخ الفاتورة:</label>
+      <input type="text" id="invoiceDate" readonly/>
     </div>
   </div>
 
-  <div class="buttons no-print">
-    <button onclick="addRow()">إضافة بند</button>
-    <button onclick="window.print()">طباعة</button>
-  </div>
-
-  <script>
-    let counter = 2;
-
-    function addRow() {
-      const table = document.getElementById("invoiceBody");
-      const row = table.insertRow();
-
-      row.innerHTML = `
-        <td>${counter++}</td>
+  <table>
+    <thead>
+      <tr>
+        <th>رقم</th>
+        <th>البيان</th>
+        <th>الكمية</th>
+        <th>السعر</th>
+        <th>الإجمالي</th>
+        <th class="no-print">❌</th>
+      </tr>
+    </thead>
+    <tbody id="invoiceBody">
+      <tr>
+        <td>1</td>
         <td><textarea></textarea></td>
-        <td><input type="number" value="1" min="1" onchange="updateTotal(this)"></td>
-        <td><input type="number" value="0" min="0" onchange="updateTotal(this)"></td>
+        <td><input type="number" value="1" min="1" onchange="updateTotal(this)"/></td>
+        <td><input type="number" value="0" min="0" onchange="updateTotal(this)"/></td>
         <td class="total">0.00</td>
         <td class="no-print"><button onclick="deleteRow(this)">❌</button></td>
-      `;
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="discounts">
+    <div id="discountAmountWrapper">
+      <input type="number" id="discountAmount" placeholder="خصم مبلغ (دينار)" style="width:160px;" oninput="updateGrandTotal()"/>
+    </div>
+    <div id="discountPercentWrapper">
+      <input type="number" id="discountPercent" placeholder="خصم (%)" style="width:160px;" oninput="updateGrandTotal()"/>
+    </div>
+  </div>
+
+  <div class="total-footer">
+    المجموع الكلي: <span id="grandTotal">0.00</span> د.أ<br>
+    الإجمالي بعد الخصم: <span id="finalTotal">0.00</span> د.أ
+  </div>
+
+  <div class="notes">
+    <label>ملاحظات:</label>
+    <textarea placeholder="ملاحظات..." rows="2"></textarea>
+  </div>
+</div>
+
+<div class="buttons no-print">
+  <button onclick="addRow()">إضافة بند</button>
+  <button onclick="window.print()">طباعة</button>
+</div>
+
+<!-- مكتبة حفظ PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<script>
+  let counter = 2;
+
+  function addRow(){
+    const table = document.getElementById("invoiceBody");
+    const row = table.insertRow();
+    row.innerHTML = `
+      <td>${counter++}</td>
+      <td><textarea></textarea></td>
+      <td><input type="number" value="1" min="1" onchange="updateTotal(this)"/></td>
+      <td><input type="number" value="0" min="0" onchange="updateTotal(this)"/></td>
+      <td class="total">0.00</td>
+      <td class="no-print"><button onclick="deleteRow(this)">❌</button></td>`;
+  }
+
+  function updateTotal(input){
+    const row = input.closest("tr");
+    const qty = parseFloat(row.cells[2].querySelector("input").value) || 0;
+    const price = parseFloat(row.cells[3].querySelector("input").value) || 0;
+    row.cells[4].textContent = (qty * price).toFixed(2);
+    updateGrandTotal();
+  }
+
+  function updateGrandTotal(){
+    let total = 0;
+    document.querySelectorAll(".total").forEach(c => total += parseFloat(c.textContent) || 0);
+    document.getElementById("grandTotal").textContent = total.toFixed(2);
+
+    const amount = parseFloat(document.getElementById("discountAmount").value) || 0;
+    const percent = parseFloat(document.getElementById("discountPercent").value) || 0;
+
+    let final = total;
+
+    if (amount > 0) {
+      final -= amount;
+      document.body.classList.add("discount-show-amount");
+      document.body.classList.remove("discount-show-percent");
+    } else if (percent > 0) {
+      final -= (total * percent / 100);
+      document.body.classList.add("discount-show-percent");
+      document.body.classList.remove("discount-show-amount");
+    } else {
+      document.body.classList.remove("discount-show-amount", "discount-show-percent");
     }
 
-    function updateTotal(input) {
-      const row = input.closest("tr");
-      const qty = parseFloat(row.cells[2].querySelector("input").value) || 0;
-      const price = parseFloat(row.cells[3].querySelector("input").value) || 0;
-      row.cells[4].textContent = (qty * price).toFixed(2);
-      updateGrandTotal();
-    }
+    final = final < 0 ? 0 : final;
+    document.getElementById("finalTotal").textContent = final.toFixed(2);
+  }
 
-    function updateGrandTotal() {
-      let total = 0;
-      document.querySelectorAll(".total").forEach((cell) => {
-        total += parseFloat(cell.textContent) || 0;
-      });
+  function deleteRow(button){
+    button.closest("tr").remove();
+    updateGrandTotal();
+  }
 
-      document.getElementById("grandTotal").textContent = total.toFixed(2);
+  window.onload = () => {
+    document.getElementById("invoiceDate").value = new Date().toLocaleDateString('ar-EG');
+    updateGrandTotal();
 
-      const discountAmount = parseFloat(document.getElementById("discountAmount").value) || 0;
-      const discountPercent = parseFloat(document.getElementById("discountPercent").value) || 0;
-
-      let final = total;
-
-      if (discountAmount > 0) {
-        final = total - discountAmount;
-      } else if (discountPercent > 0) {
-        final = total - (total * discountPercent / 100);
-      }
-
-      final = final < 0 ? 0 : final;
-
-      document.getElementById("finalTotal").textContent = final.toFixed(2);
-    }
-
-    function deleteRow(button) {
-      button.closest("tr").remove();
-      updateGrandTotal();
-    }
-
-    window.onload = () => {
-      document.getElementById("invoiceDate").value = new Date().toLocaleDateString('ar-EG');
-      updateGrandTotal();
-
-      setTimeout(() => {
-        alert("هل تريد حفظ الفاتورة كـ PDF؟\nاختر طباعة ثم احفظها كـ PDF.");
-      }, 300);
-    };
-  </script>
+    setTimeout(() => {
+      const opt = {
+        margin: 0.3,
+        filename: `فاتورة_${new Date().toLocaleDateString('ar-EG')}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+      };
+      html2pdf().set(opt).from(document.getElementById('invoiceContent')).save();
+    }, 1000);
+  };
+</script>
 
 </body>
 </html>
