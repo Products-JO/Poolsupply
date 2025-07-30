@@ -1,46 +1,34 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>فاتورة مبيعات</title>
   <style>
     body {
       font-family: Arial;
-      direction: rtl;
       background: #f4f4f4;
-      padding: 10px;
       margin: 0;
+      padding: 10px;
     }
     #invoiceContent {
       background: white;
       max-width: 800px;
       margin: auto;
       padding: 15px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
       border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
     }
-    h2[contenteditable] {
-      text-align: center;
-      margin-bottom: 20px;
-      font-size: 20px;
-      border: 1px dashed transparent;
-      padding: 5px;
-    }
-    h2[contenteditable]:hover {
-      border-color: #ccc;
-    }
-    .info {
+    .info, .buttons {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       margin-bottom: 15px;
+      justify-content: space-between;
     }
     .field {
       flex: 1;
-      min-width: 140px;
-      display: flex;
-      flex-direction: column;
+      min-width: 120px;
     }
     label {
       font-weight: bold;
@@ -58,37 +46,19 @@
       border-collapse: collapse;
       margin-top: 10px;
     }
-    th:nth-child(2), td:nth-child(2) {
-      width: 40%;
-    }
     th, td {
       border: 1px solid #ccc;
-      padding: 3px 2px;
+      padding: 4px;
       font-size: 12px;
       text-align: center;
-      vertical-align: middle;
-      line-height: 1.1;
-      height: 32px;
     }
     td textarea {
-      height: 28px;
-      resize: none;
       border: none;
-      font-size: 12px;
-      padding: 2px;
-    }
-    input[type="number"] {
-      font-size: 12px;
-      padding: 3px;
-      text-align: center;
-    }
-    .buttons {
-      text-align: center;
-      margin-top: 15px;
+      resize: none;
+      height: 28px;
     }
     button {
-      padding: 8px 12px;
-      margin: 3px;
+      padding: 6px 10px;
       font-size: 13px;
       background: #28a745;
       color: white;
@@ -96,206 +66,133 @@
       border-radius: 4px;
       cursor: pointer;
     }
-    .discounts {
-      margin-top: 10px;
-      display: flex;
-      gap: 10px;
-    }
-    .discount-label {
-      font-size: 14px;
-      font-weight: bold;
-      text-align: right;
-      margin-top: 10px;
-    }
     .total-footer {
       margin-top: 10px;
-      text-align: right;
       font-size: 14px;
+      text-align: right;
     }
-    #finalTotal {
-      font-weight: bold;
-      color: green;
-    }
-    .no-print .tools {
-      display: flex;
-      justify-content: center;
-      gap: 5px;
-    }
-
-    @media print {
-      .no-print {
-        display: none !important;
-      }
-      h2[contenteditable] {
-        border: none !important;
-      }
-      #discountAmount, #discountPercent {
-        display: none !important;
-      }
-      th:last-child,
-      td:last-child {
-        display: none !important;
-      }
-    }
+    #finalTotal { color: green; }
   </style>
 </head>
 <body>
 
 <div id="invoiceContent">
   <h2 contenteditable="true">فاتورة مبيعات</h2>
+
   <div class="info">
     <div class="field">
       <label>اسم العميل:</label>
-      <input type="text" placeholder="اسم العميل"/>
+      <input type="text" id="clientName">
     </div>
     <div class="field">
       <label>رقم الفاتورة:</label>
-      <input type="text" placeholder="001/2025"/>
+      <input type="text" id="invoiceNumber">
     </div>
     <div class="field">
       <label>تاريخ الفاتورة:</label>
-      <input type="text" id="invoiceDate" readonly/>
+      <input type="text" id="invoiceDate" readonly>
     </div>
   </div>
 
   <table>
     <thead>
-      <tr>
-        <th>رقم</th>
-        <th>البيان</th>
-        <th>الكمية</th>
-        <th>السعر</th>
-        <th>الإجمالي</th>
-        <th class="no-print">تحكم</th>
-      </tr>
+      <tr><th>رقم</th><th>البيان</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th><th>حذف</th></tr>
     </thead>
-    <tbody id="invoiceBody">
-      <tr>
-        <td>1</td>
-        <td><textarea></textarea></td>
-        <td><input type="number" placeholder="-" onchange="updateTotal(this)"/></td>
-        <td><input type="number" placeholder="-" onchange="updateTotal(this)"/></td>
-        <td class="total">0.00</td>
-        <td class="no-print tools">
-          <button onclick="moveRow(this, -1)">↑</button>
-          <button onclick="moveRow(this, 1)">↓</button>
-          <button onclick="deleteRow(this)">❌</button>
-        </td>
-      </tr>
-    </tbody>
+    <tbody id="invoiceBody"></tbody>
   </table>
 
-  <div class="discounts no-print">
-    <input type="number" id="discountAmount" placeholder="خصم مبلغ (دينار)" style="width:160px;" oninput="updateGrandTotal()"/>
-    <input type="number" id="discountPercent" placeholder="خصم (%)" style="width:160px;" oninput="updateGrandTotal()"/>
+  <div class="buttons">
+    <button onclick="addRow()">إضافة بند</button>
+    <button onclick="saveInvoice()">💾 حفظ الفاتورة</button>
+    <button onclick="loadInvoice()">📂 تحميل الفاتورة</button>
+    <button onclick="window.print()">طباعة</button>
   </div>
-
-  <div id="discountText" class="discount-label" style="display: none;"></div>
 
   <div class="total-footer">
-    المجموع الكلي: <span id="grandTotal">0.00</span> د.أ<br>
-    الإجمالي بعد الخصم: <span id="finalTotal">0.00</span> د.أ
+    <div>المجموع الكلي: <span id="grandTotal">0.00</span> د.أ</div>
   </div>
-
-  <div class="notes">
-    <label>ملاحظات:</label>
-    <textarea placeholder="ملاحظات..." rows="2"></textarea>
-  </div>
-</div>
-
-<div class="buttons no-print">
-  <button onclick="addRow()">إضافة بند</button>
-  <button onclick="window.print()">طباعة</button>
 </div>
 
 <script>
-  function addRow(){
-    const table = document.getElementById("invoiceBody");
-    const row = table.insertRow();
-    row.innerHTML = `
-      <td></td>
-      <td><textarea></textarea></td>
-      <td><input type="number" placeholder="-" onchange="updateTotal(this)"/></td>
-      <td><input type="number" placeholder="-" onchange="updateTotal(this)"/></td>
-      <td class="total">0.00</td>
-      <td class="no-print tools">
-        <button onclick="moveRow(this, -1)">↑</button>
-        <button onclick="moveRow(this, 1)">↓</button>
-        <button onclick="deleteRow(this)">❌</button>
-      </td>`;
-    reNumberRows();
-  }
+function addRow(data = {}) {
+  const table = document.getElementById("invoiceBody");
+  const row = table.insertRow();
+  row.innerHTML = `
+    <td></td>
+    <td><textarea>${data.desc || ''}</textarea></td>
+    <td><input type="number" value="${data.qty || ''}" oninput="updateTotal(this)"></td>
+    <td><input type="number" value="${data.price || ''}" oninput="updateTotal(this)"></td>
+    <td class="total">0.00</td>
+    <td><button onclick="deleteRow(this)">❌</button></td>
+  `;
+  reNumberRows();
+  updateTotal(row.cells[2].querySelector("input"));
+}
 
-  function updateTotal(input){
-    const row = input.closest("tr");
-    const qty = parseFloat(row.cells[2].querySelector("input").value) || 0;
-    const price = parseFloat(row.cells[3].querySelector("input").value) || 0;
-    row.cells[4].textContent = (qty * price).toFixed(2);
-    updateGrandTotal();
-  }
+function reNumberRows() {
+  document.querySelectorAll("#invoiceBody tr").forEach((row, i) => row.cells[0].textContent = i + 1);
+}
 
-  function updateGrandTotal(){
-    let total = 0;
-    document.querySelectorAll(".total").forEach(c => total += parseFloat(c.textContent) || 0);
-    document.getElementById("grandTotal").textContent = total.toFixed(2);
+function deleteRow(btn) {
+  btn.closest("tr").remove();
+  reNumberRows();
+  updateGrandTotal();
+}
 
-    const amount = parseFloat(document.getElementById("discountAmount").value) || 0;
-    const percent = parseFloat(document.getElementById("discountPercent").value) || 0;
-    const discountText = document.getElementById("discountText");
+function updateTotal(input) {
+  const row = input.closest("tr");
+  const qty = parseFloat(row.cells[2].querySelector("input").value) || 0;
+  const price = parseFloat(row.cells[3].querySelector("input").value) || 0;
+  row.cells[4].textContent = (qty * price).toFixed(2);
+  updateGrandTotal();
+}
 
-    let final = total;
-    let discountLabel = "";
+function updateGrandTotal() {
+  let total = 0;
+  document.querySelectorAll(".total").forEach(cell => {
+    total += parseFloat(cell.textContent) || 0;
+  });
+  document.getElementById("grandTotal").textContent = total.toFixed(2);
+}
 
-    if (amount > 0) {
-      final -= amount;
-      discountLabel = `قيمة الخصم: ${amount.toFixed(2)} د.أ`;
-    } else if (percent > 0) {
-      const disc = (total * percent / 100);
-      final -= disc;
-      discountLabel = `قيمة الخصم: ${percent}%`;
-    }
-
-    if (discountLabel) {
-      discountText.style.display = "block";
-      discountText.textContent = discountLabel;
-    } else {
-      discountText.style.display = "none";
-    }
-
-    final = final < 0 ? 0 : final;
-    document.getElementById("finalTotal").textContent = final.toFixed(2);
-  }
-
-  function deleteRow(button){
-    button.closest("tr").remove();
-    reNumberRows();
-    updateGrandTotal();
-  }
-
-  function reNumberRows(){
-    const rows = document.querySelectorAll("#invoiceBody tr");
-    rows.forEach((row, index) => {
-      row.cells[0].textContent = index + 1;
-    });
-  }
-
-  function moveRow(button, direction){
-    const row = button.closest("tr");
-    const table = document.getElementById("invoiceBody");
-    const index = Array.from(table.rows).indexOf(row);
-    const targetIndex = index + direction;
-
-    if (targetIndex >= 0 && targetIndex < table.rows.length) {
-      const targetRow = table.rows[targetIndex];
-      table.insertBefore(row, direction === 1 ? targetRow.nextSibling : targetRow);
-      reNumberRows();
-    }
-  }
-
-  window.onload = () => {
-    document.getElementById("invoiceDate").value = new Date().toLocaleDateString('ar-EG');
-    updateGrandTotal();
+function saveInvoice() {
+  const number = document.getElementById("invoiceNumber").value;
+  if (!number) return alert("أدخل رقم الفاتورة أولاً");
+  const invoice = {
+    client: document.getElementById("clientName").value,
+    date: document.getElementById("invoiceDate").value,
+    items: []
   };
+  document.querySelectorAll("#invoiceBody tr").forEach(row => {
+    invoice.items.push({
+      desc: row.cells[1].querySelector("textarea").value,
+      qty: row.cells[2].querySelector("input").value,
+      price: row.cells[3].querySelector("input").value
+    });
+  });
+  localStorage.setItem("invoice_" + number, JSON.stringify(invoice));
+  alert("تم حفظ الفاتورة");
+}
+
+function loadInvoice() {
+  const number = document.getElementById("invoiceNumber").value;
+  if (!number) return alert("أدخل رقم الفاتورة لتحميلها");
+  const data = localStorage.getItem("invoice_" + number);
+  if (!data) return alert("لا توجد فاتورة بهذا الرقم");
+
+  const invoice = JSON.parse(data);
+  document.getElementById("clientName").value = invoice.client;
+  document.getElementById("invoiceDate").value = invoice.date;
+
+  document.getElementById("invoiceBody").innerHTML = "";
+  invoice.items.forEach(item => addRow(item));
+  updateGrandTotal();
+}
+
+window.onload = () => {
+  document.getElementById("invoiceDate").value = new Date().toLocaleDateString('ar-EG');
+  addRow();
+};
 </script>
 
 </body>
