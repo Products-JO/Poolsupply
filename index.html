@@ -25,6 +25,7 @@
       gap: 10px;
       margin-bottom: 15px;
       justify-content: space-between;
+      align-items: center;
     }
     .field {
       flex: 1;
@@ -71,7 +72,45 @@
       font-size: 14px;
       text-align: right;
     }
-    #finalTotal { color: green; }
+    #finalTotal { color: green; font-weight: bold; }
+    #discountDisplay {
+      margin: 8px 0;
+      font-weight: bold;
+      color: #c00;
+    }
+    @media print {
+      #discountInputRow, #paymentsSection, .buttons, #notesSection {
+        display: none !important;
+      }
+      textarea, input {
+        border: none;
+      }
+      #notesPrint {
+        display: block !important;
+      }
+    }
+    #paymentsList {
+      margin-top: 6px;
+      text-align: right;
+    }
+    #paymentsList div {
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+    #paymentsList button {
+      background: #dc3545;
+      padding: 2px 6px;
+      font-size: 11px;
+      margin-left: 6px;
+      border-radius: 3px;
+    }
+    #notesPrint {
+      display: none;
+      white-space: pre-wrap;
+      margin-top: 10px;
+      font-weight: bold;
+      font-size: 13px;
+    }
   </style>
 </head>
 <body>
@@ -96,34 +135,58 @@
 
   <table>
     <thead>
-      <tr><th>رقم</th><th>البيان</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th><th>حذف</th></tr>
+      <tr><th>رقم</th><th>البيان</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr>
     </thead>
     <tbody id="invoiceBody"></tbody>
   </table>
 
   <div class="buttons">
     <button onclick="addRow()">إضافة بند</button>
+    <button onclick="swapRows()">🔁 تبديل بندين</button>
     <button onclick="saveInvoice()">💾 حفظ الفاتورة</button>
     <button onclick="loadInvoice()">📂 تحميل الفاتورة</button>
-    <button onclick="window.print()">طباعة</button>
+    <button onclick="window.print()">🖨️ طباعة</button>
   </div>
 
   <div class="total-footer">
+    <div id="discountInputRow">
+      <label>قيمة الخصم:</label>
+      <input type="number" id="discountValue" min="0" step="0.01" value="0" oninput="updateGrandTotal()" style="width:150px;">
+    </div>
+
+    <div id="paymentsSection">
+      <label>الدفعات:</label>
+      <input type="number" id="newPayment" min="0" step="0.01" placeholder="أدخل مبلغ دفعة" style="width:150px;">
+      <button onclick="addPayment()">➕ إضافة دفعة</button>
+      <div id="paymentsList"></div>
+    </div>
+
+    <div id="discountDisplay"></div>
     <div>المجموع الكلي: <span id="grandTotal">0.00</span> د.أ</div>
+    <div>المجموع بعد الخصم: <span id="totalAfterDiscount">0.00</span> د.أ</div>
+    <div id="finalTotal">المبلغ النهائي بعد الدفعات: 0.00 د.أ</div>
+
+    <!-- قسم الملاحظات -->
+    <div id="notesSection" style="margin-top: 20px;">
+      <label for="notes" style="font-weight:bold;">ملاحظات:</label>
+      <textarea id="notes" rows="3" placeholder="أدخل أي ملاحظات إضافية..." style="width:100%; margin-top:5px;"></textarea>
+    </div>
+    <div id="notesPrint"></div>
   </div>
 </div>
 
 <script>
+let payments = [];
+
 function addRow(data = {}) {
   const table = document.getElementById("invoiceBody");
   const row = table.insertRow();
   row.innerHTML = `
     <td></td>
     <td><textarea>${data.desc || ''}</textarea></td>
-    <td><input type="number" value="${data.qty || ''}" oninput="updateTotal(this)"></td>
-    <td><input type="number" value="${data.price || ''}" oninput="updateTotal(this)"></td>
+    <td><input type="number" min="0" value="${data.qty || ''}" oninput="updateTotal(this)"></td>
+    <td><input type="number" min="0" value="${data.price || ''}" oninput="updateTotal(this)"></td>
     <td class="total">0.00</td>
-    <td><button onclick="deleteRow(this)">❌</button></td>
   `;
   reNumberRows();
   updateTotal(row.cells[2].querySelector("input"));
@@ -131,12 +194,6 @@ function addRow(data = {}) {
 
 function reNumberRows() {
   document.querySelectorAll("#invoiceBody tr").forEach((row, i) => row.cells[0].textContent = i + 1);
-}
-
-function deleteRow(btn) {
-  btn.closest("tr").remove();
-  reNumberRows();
-  updateGrandTotal();
 }
 
 function updateTotal(input) {
@@ -152,7 +209,83 @@ function updateGrandTotal() {
   document.querySelectorAll(".total").forEach(cell => {
     total += parseFloat(cell.textContent) || 0;
   });
+
   document.getElementById("grandTotal").textContent = total.toFixed(2);
+
+  const discountValue = parseFloat(document.getElementById("discountValue").value) || 0;
+  const discount = discountValue > total ? total : discountValue;
+
+  document.getElementById("discountDisplay").textContent =
+    discount > 0 ? `قيمة الخصم: ${discount.toFixed(2)} د.أ` : '';
+
+  const totalAfterDiscount = total - discount;
+  document.getElementById("totalAfterDiscount").textContent = totalAfterDiscount.toFixed(2);
+
+  const totalPayments = payments.reduce((sum, p) => sum + p.amount, 0);
+  let finalAmount = totalAfterDiscount - totalPayments;
+  if (finalAmount < 0) finalAmount = 0;
+
+  document.getElementById("finalTotal").textContent = `المبلغ النهائي بعد الدفعات: ${finalAmount.toFixed(2)} د.أ`;
+
+  document.getElementById("notesPrint").textContent = document.getElementById("notes").value.trim();
+  renderPaymentsList();
+}
+
+function addPayment() {
+  const input = document.getElementById("newPayment");
+  const val = parseFloat(input.value);
+  if (isNaN(val) || val <= 0) return alert("أدخل مبلغ دفعة صحيح");
+  payments.push({ id: Date.now(), amount: val });
+  input.value = "";
+  updateGrandTotal();
+}
+
+function renderPaymentsList() {
+  const container = document.getElementById("paymentsList");
+  container.innerHTML = "";
+  if (payments.length === 0) {
+    container.textContent = "لا توجد دفعات بعد";
+    return;
+  }
+  payments.forEach(payment => {
+    const div = document.createElement("div");
+    div.textContent = `دفعة: ${payment.amount.toFixed(2)} د.أ`;
+    const btn = document.createElement("button");
+    btn.textContent = "حذف";
+    btn.onclick = () => {
+      payments = payments.filter(p => p.id !== payment.id);
+      updateGrandTotal();
+    };
+    div.appendChild(btn);
+    container.appendChild(div);
+  });
+}
+
+function swapRows() {
+  const rows = document.querySelectorAll("#invoiceBody tr");
+  if (rows.length < 2) return alert("يجب أن يكون هناك على الأقل بندين للتبديل.");
+
+  const index1 = parseInt(prompt("رقم البند الأول:")) - 1;
+  const index2 = parseInt(prompt("رقم البند الثاني:")) - 1;
+
+  if (
+    isNaN(index1) || isNaN(index2) ||
+    index1 < 0 || index2 < 0 ||
+    index1 >= rows.length || index2 >= rows.length
+  ) {
+    alert("أرقام البنود غير صحيحة.");
+    return;
+  }
+
+  if (index1 === index2) return;
+
+  const parent = rows[0].parentElement;
+  const temp = rows[index1].cloneNode(true);
+  parent.replaceChild(rows[index2].cloneNode(true), rows[index1]);
+  parent.replaceChild(temp, rows[index2]);
+
+  reNumberRows();
+  updateGrandTotal();
 }
 
 function saveInvoice() {
@@ -161,6 +294,9 @@ function saveInvoice() {
   const invoice = {
     client: document.getElementById("clientName").value,
     date: document.getElementById("invoiceDate").value,
+    discountValue: parseFloat(document.getElementById("discountValue").value) || 0,
+    payments,
+    notes: document.getElementById("notes").value,
     items: []
   };
   document.querySelectorAll("#invoiceBody tr").forEach(row => {
@@ -183,7 +319,10 @@ function loadInvoice() {
   const invoice = JSON.parse(data);
   document.getElementById("clientName").value = invoice.client;
   document.getElementById("invoiceDate").value = invoice.date;
+  document.getElementById("discountValue").value = invoice.discountValue || 0;
+  document.getElementById("notes").value = invoice.notes || '';
 
+  payments = invoice.payments || [];
   document.getElementById("invoiceBody").innerHTML = "";
   invoice.items.forEach(item => addRow(item));
   updateGrandTotal();
