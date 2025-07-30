@@ -79,14 +79,11 @@
       color: #c00;
     }
     @media print {
-      #discountInputRow, #paymentsSection, .buttons, #notesSection {
+      #discountInputRow, #paymentsSection, .buttons {
         display: none !important;
       }
       textarea, input {
-        border: none;
-      }
-      #notesPrint {
-        display: block !important;
+        border: 1px solid #ccc;
       }
     }
     #paymentsList {
@@ -103,13 +100,6 @@
       font-size: 11px;
       margin-left: 6px;
       border-radius: 3px;
-    }
-    #notesPrint {
-      display: none;
-      white-space: pre-wrap;
-      margin-top: 10px;
-      font-weight: bold;
-      font-size: 13px;
     }
   </style>
 </head>
@@ -171,7 +161,6 @@
       <label for="notes" style="font-weight:bold;">ملاحظات:</label>
       <textarea id="notes" rows="3" placeholder="أدخل أي ملاحظات إضافية..." style="width:100%; margin-top:5px;"></textarea>
     </div>
-    <div id="notesPrint"></div>
   </div>
 </div>
 
@@ -226,8 +215,6 @@ function updateGrandTotal() {
   if (finalAmount < 0) finalAmount = 0;
 
   document.getElementById("finalTotal").textContent = `المبلغ النهائي بعد الدفعات: ${finalAmount.toFixed(2)} د.أ`;
-
-  document.getElementById("notesPrint").textContent = document.getElementById("notes").value.trim();
   renderPaymentsList();
 }
 
@@ -321,7 +308,6 @@ function loadInvoice() {
   document.getElementById("invoiceDate").value = invoice.date;
   document.getElementById("discountValue").value = invoice.discountValue || 0;
   document.getElementById("notes").value = invoice.notes || '';
-
   payments = invoice.payments || [];
   document.getElementById("invoiceBody").innerHTML = "";
   invoice.items.forEach(item => addRow(item));
