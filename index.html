@@ -173,8 +173,8 @@
       <tr>
         <td>1</td>
         <td><textarea></textarea></td>
-        <td><input type="number" value="1" min="1" onchange="updateTotal(this)"/></td>
-        <td><input type="number" value="0" min="0" onchange="updateTotal(this)"/></td>
+        <td><input type="number" placeholder="-" onchange="updateTotal(this)"/></td>
+        <td><input type="number" placeholder="-" onchange="updateTotal(this)"/></td>
         <td class="total">0.00</td>
         <td class="no-print tools">
           <button onclick="moveRow(this, -1)">↑</button>
@@ -215,8 +215,8 @@
     row.innerHTML = `
       <td></td>
       <td><textarea></textarea></td>
-      <td><input type="number" value="1" min="1" onchange="updateTotal(this)"/></td>
-      <td><input type="number" value="0" min="0" onchange="updateTotal(this)"/></td>
+      <td><input type="number" placeholder="-" onchange="updateTotal(this)"/></td>
+      <td><input type="number" placeholder="-" onchange="updateTotal(this)"/></td>
       <td class="total">0.00</td>
       <td class="no-print tools">
         <button onclick="moveRow(this, -1)">↑</button>
