@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pool Supplies</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      direction: rtl;
+      background: #f8f8f8;
+      margin: 0;
+      padding: 0;
+      scroll-behavior: smooth;
+    }
+    header {
+      background: #0077b6;
+      color: white;
+      text-align: center;
+      padding: 20px 20px 60px 20px; /* زودت padding bottom عشان مساحة للسهم */
+      position: relative;
+    }
+    header img.logo-new {
+      width: 120px;
+      display: block;
+      margin: 0 auto 10px;
+      border-radius: 8px;
+    }
+    h1 {
+      margin: 10px 0 5px;
+    }
+    p {
+      margin: 0;
+    }
+    header small {
+      color: rgba(255, 255, 255, 0.8);
+      display: block;
+      margin-top: 5px;
+      font-size: 0.9rem;
+    }
+
+    /* زر السهم */
+    #scrollDownBtn {
+      position: absolute;
+      bottom: 15px; /* تحت النص */
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.8);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      box-shadow: 0 0 5px rgba(0,0,0,0.2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background 0.3s ease;
+      z-index: 10;
+    }
+    #scrollDownBtn:hover {
+      background: rgba(255, 255, 255, 1);
+    }
+    /* شكل السهم */
+    #scrollDownBtn svg {
+      width: 20px;
+      height: 20px;
+      fill: #0077b6;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      scroll-margin-top: 80px;
+    }
+    .product {
+      background: white;
+      border-radius: 10px;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .main-image {
+      width: 100%;
+      height: 300px;
+      object-fit: contain;
+      background: #fff;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      transition: all 0.3s ease-in-out;
+    }
+    .thumbnail-container {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .thumbnail {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: transform 0.2s;
+      background: #fff;
+    }
+    .thumbnail:hover {
+      transform: scale(1.1);
+      border-color: #0077b6;
+    }
+    .whatsapp-btn {
+      display: inline-block;
+      padding: 10px 15px;
+      background: #25d366;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img class="logo-new" src="https://i.postimg.cc/RVvsZjHH/c2903db7-d56a-470c-8ab4-84c592de2a63.jpg" alt="Logo" />
+    <h1>Pool Supplies</h1>
+    <p>أهلاً وسهلاً بكم في متجر مستلزمات المسابح</p>
+    <small>تواصلوا معنا عبر الرقم 0797610007</small>
+    <button id="scrollDownBtn" aria-label="انزل للمنتج الثاني">
+      <svg viewBox="0 0 24 24" >
+        <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/>
+      </svg>
+    </button>
+  </header>
+
+  <div class="container">
+
+    <!-- المنتج الأول -->
+    <div class="product" data-product="1" id="product-1">
+      <img class="main-image" id="main-img-1" src="https://i.postimg.cc/kg5pfxjh/951-EA5-CA-AB53-4922-81-F5-1-BFAE3148-D30.png" alt="فلاتر مسبح" />
+
+      <div class="thumbnail-container" data-product="1">
+        <img class="thumbnail" src="https://i.postimg.cc/kg5pfxjh/951-EA5-CA-AB53-4922-81-F5-1-BFAE3148-D30.png" />
+        <img class="thumbnail" src="https://i.postimg.cc/rprgPg5g/868-A6710-F739-4-F0-F-818-F-09-D2510-A0257.jpg" />
+        <img class="thumbnail" src="https://i.postimg.cc/MT05WTPQ/High-Performance-Fiber-Glass-Swimming-Pool-Sand-Water-Filter-Pool-Equipment-Accessories.jpg" />
+        <img class="thumbnail" src="https://i.postimg.cc/SRyrjh3t/IMG-1135.jpg" />
+        <img class="thumbnail" src="https://i.postimg.cc/fLQ5nXKs/IMG-1783.jpg" />
+      </div>
+
+      <h3>فلاتر مسبح فيبر جلاس</h3>
+      <p>فلتر عالي الجودة لتنقية مياه المسابح، مصنوع من الفيبرجلاس المتين، يتحمّل الضغط ويتميز بسهولة الصيانة.</p>
+      <a class="whatsapp-btn" href="https://wa.me/962797610007?text=مرحباً، أريد الاستفسار عن فلاتر برك السباحة">تواصل واتساب</a>
+    </div>
+
+    <!-- المنتج الثاني -->
+    <div class="product" data-product="2" id="product-2">
+      <img class="main-image" id="main-img-2" src="https://i.postimg.cc/kg35Sv7K/pixelcut-export-1671142097940.png" alt="مضخات برك سباحة عالية الجودة" />
+      <div class="thumbnail-container" data-product="2">
+        <img class="thumbnail" src="https://i.postimg.cc/kg35Sv7K/pixelcut-export-1671142097940.png" />
+        <img class="thumbnail" src="https://i.postimg.cc/rmPVwShd/2-20240224-125747-0001.png" />
+        <img class="thumbnail" src="https://i.postimg.cc/NF2g95Vd/3-D6-FB657-119-B-428-E-AC1-D-948-BFE3729-FC.png" />
+        <img class="thumbnail" src="https://i.postimg.cc/Kzzcb95S/s-l500.png" />
+        <img class="thumbnail" src="https://i.postimg.cc/7LXPpv0n/self-priming-pumps.jpg" />
+        <img class="thumbnail" src="https://i.postimg.cc/8CTPKkJC/STP-Swimming-Pool-Pump-for-Circulation.jpg" />
+      </div>
+      <h3>مضخات برك سباحة عالية الجودة</h3>
+      <p>مجموعة متنوعة من مضخات المسابح المصممة لضمان أداء عالي وحماية المسبح بكفاءة.</p>
+      <a class="whatsapp-btn" href="https://wa.me/962797610007?text=مرحباً، أريد الاستفسار عن مضخات برك السباحة">تواصل واتساب</a>
+    </div>
+
+    <!-- المنتج الثالث -->
+    <div class="product" data-product="3" id="product-3">
+      <img class="main-image" id="main-img-3" src="https://i.postimg.cc/BbbCxGcY/1721391169764.png" alt="عدة تنظيف برك السباحة" />
+      <div class="thumbnail-container" data-product="3">
+        <img class="thumbnail" src="https://i.postimg.cc/BbbCxGcY/1721391169764.png" />
+        <img class="thumbnail" src="https://i.postimg.cc/KzJNkYL3/1725176213204.png" />
+        <img class="thumbnail" src="https://i.postimg.cc/5yrSgksx/1725176288093.png" />
+        <img class="thumbnail" src="https://i.postimg.cc/Y9qNHwVr/1-AC56877-A2-BB-41-AA-88-CC-CADBCFB8-CC7-B.png" />
+        <img class="thumbnail" src="https://i.postimg.cc/C1F7x8ZV/5efd77b7959a6308030c0f3c-large.jpg" />
+        <img class="thumbnail" src="https://i.postimg.cc/MKcDHqGX/IMG-20240623-WA0016.jpg" />
+        <img class="thumbnail" src="https://i.postimg.cc/m20SFJcj/IMG-1971.jpg" />
+        <img class="thumbnail" src="https://i.postimg.cc/CK0Hc8sf/IMG-1972.jpg" />
+        <img class="thumbnail" src="https://i.postimg.cc/XvgKmvs1/IMG-1973.png" />
+        <img class="thumbnail" src="https://i.postimg.cc/Njmk8Dmc/IMG-3064.jpg" />
+        <img class="thumbnail" src="https://i.postimg.cc/05Xn9bPL/IMG-3065.jpg" />
+        <img class="thumbnail" src="https://i.postimg.cc/DyDxPmNq/net-from-pool-maintenance2.jpg" />
+        <img class="thumbnail" src="https://i.postimg.cc/y6LQWLXp/pool-water-test.jpg" />
+        <img class="thumbnail" src="https://i.postimg.cc/5NjPz8s4/pool-cleaning-leaves-net-800x.jpg" />
+        <img class="thumbnail" src="https://i.postimg.cc/Xv6xtm4q/Screenshot-20240701-162747.jpg" />
+        <img class="thumbnail" src="https://i.postimg.cc/wB5Fz2jV/Swimming-Pool-Leaf-Scoop-Daisy.png" />
+        <img class="thumbnail" src="https://i.postimg.cc/CxqmPSy9/T54.jpg" />
+      </div>
+      <h3>عدة تنظيف برك السباحة</h3>
+      <p>مجموعة شاملة من أدوات التنظيف للحفاظ على برك السباحة نظيفة وآمنة.</p>
+      <a class="whatsapp-btn" href="https://wa.me/962797610007?text=مرحباً، أريد الاستفسار عن عدة تنظيف برك السباحة">تواصل واتساب</a>
+    </div>
+
+  </div>
+
+  <script>
+    // التنقل للسفلي عند الضغط على السهم (ينزل للمنتج رقم 2)
+    document.getElementById('scrollDownBtn').addEventListener('click', () => {
+      document.getElementById('product-2').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // تبديل الصورة الرئيسية عند الضغط على الصورة المصغرة
+    document.querySelectorAll('.thumbnail-container').forEach(container => {
+      container.addEventListener('click', e => {
+        if(e.target.classList.contains('thumbnail')) {
+          const productId = container.getAttribute('data-product');
+          const mainImg = document.getElementById(`main-img-${productId}`);
+          mainImg.src = e.target.src;
+          resetInterval(productId, e.target.src);
+        }
+      });
+    });
+
+    // تقليب الصور تلقائيًا لكل منتج
+    const intervals = {};
+    const currentIndexes = {};
+
+    document.querySelectorAll('.product').forEach(product => {
+      const productId = product.getAttribute('data-product');
+      const thumbnails = product.querySelectorAll('.thumbnail');
+      currentIndexes[productId] = 0;
+
+      intervals[productId] = setInterval(() => {
+        currentIndexes[productId]++;
+        if (currentIndexes[productId] >= thumbnails.length) {
+          currentIndexes[productId] = 0;
+        }
+        const mainImg = document.getElementById(`main-img-${productId}`);
+        mainImg.src = thumbnails[currentIndexes[productId]].src;
+      }, 3000);
+    });
+
+    function resetInterval(productId, newSrc) {
+      clearInterval(intervals[productId]);
+      const product = document.querySelector(`.product[data-product="${productId}"]`);
+      const thumbnails = product.querySelectorAll('.thumbnail');
+      const idx = Array.from(thumbnails).findIndex(img => img.src === newSrc);
+      currentIndexes[productId] = idx >= 0 ? idx : 0;
+
+      intervals[productId] = setInterval(() => {
+        currentIndexes[productId]++;
+        if (currentIndexes[productId] >= thumbnails.length) {
+          currentIndexes[productId] = 0;
+        }
+        const mainImg = document.getElementById(`main-img-${productId}`);
+        mainImg.src = thumbnails[currentIndexes[productId]].src;
+      }, 3000);
+    }
+  </script>
+
+</body>
+</html>
