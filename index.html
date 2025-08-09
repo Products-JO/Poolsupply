@@ -1,324 +1,260 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>فاتورة مبيعات</title>
+  <title>Pool Supplies</title>
   <style>
     body {
-      font-family: Arial;
-      background: #f4f4f4;
+      font-family: Arial, sans-serif;
+      direction: rtl;
+      background: #f8f8f8;
       margin: 0;
-      padding: 10px;
+      padding: 0;
+      scroll-behavior: smooth;
     }
-    #invoiceContent {
-      background: white;
-      max-width: 800px;
-      margin: auto;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
-    }
-    .info, .buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 15px;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .field {
-      flex: 1;
-      min-width: 120px;
-    }
-    label {
-      font-weight: bold;
-      font-size: 13px;
-    }
-    input, textarea {
-      padding: 6px;
-      font-size: 13px;
-      width: 100%;
-      box-sizing: border-box;
-      text-align: right;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 4px;
-      font-size: 12px;
-      text-align: center;
-    }
-    td textarea {
-      border: none;
-      resize: none;
-      height: 28px;
-    }
-    button {
-      padding: 6px 10px;
-      font-size: 13px;
-      background: #28a745;
+    header {
+      background: #0077b6;
       color: white;
+      text-align: center;
+      padding: 20px 20px 60px 20px; /* زودت padding bottom عشان مساحة للسهم */
+      position: relative;
+    }
+    header img.logo-new {
+      width: 120px;
+      display: block;
+      margin: 0 auto 10px;
+      border-radius: 8px;
+    }
+    h1 {
+      margin: 10px 0 5px;
+    }
+    p {
+      margin: 0;
+    }
+    header small {
+      color: rgba(255, 255, 255, 0.8);
+      display: block;
+      margin-top: 5px;
+      font-size: 0.9rem;
+    }
+
+    /* زر السهم */
+    #scrollDownBtn {
+      position: absolute;
+      bottom: 15px; /* تحت النص */
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.8);
       border: none;
-      border-radius: 4px;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
       cursor: pointer;
+      box-shadow: 0 0 5px rgba(0,0,0,0.2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background 0.3s ease;
+      z-index: 10;
     }
-    .total-footer {
-      margin-top: 10px;
-      font-size: 14px;
-      text-align: right;
+    #scrollDownBtn:hover {
+      background: rgba(255, 255, 255, 1);
     }
-    #finalTotal { color: green; font-weight: bold; }
-    #discountDisplay {
-      margin: 8px 0;
+    /* شكل السهم */
+    #scrollDownBtn svg {
+      width: 20px;
+      height: 20px;
+      fill: #0077b6;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      scroll-margin-top: 80px;
+    }
+    .product {
+      background: white;
+      border-radius: 10px;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .main-image {
+      width: 100%;
+      height: 300px;
+      object-fit: contain;
+      background: #fff;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      transition: all 0.3s ease-in-out;
+    }
+    .thumbnail-container {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .thumbnail {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: transform 0.2s;
+      background: #fff;
+    }
+    .thumbnail:hover {
+      transform: scale(1.1);
+      border-color: #0077b6;
+    }
+    .whatsapp-btn {
+      display: inline-block;
+      padding: 10px 15px;
+      background: #25d366;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
       font-weight: bold;
-      color: #c00;
-    }
-    @media print {
-      #discountInputRow, #paymentsSection, .buttons {
-        display: none !important;
-      }
-      textarea, input {
-        border: 1px solid #ccc;
-      }
-    }
-    #paymentsList {
-      margin-top: 6px;
-      text-align: right;
-    }
-    #paymentsList div {
-      margin-bottom: 4px;
-      font-size: 13px;
-    }
-    #paymentsList button {
-      background: #dc3545;
-      padding: 2px 6px;
-      font-size: 11px;
-      margin-left: 6px;
-      border-radius: 3px;
     }
   </style>
 </head>
 <body>
 
-<div id="invoiceContent">
-  <h2 contenteditable="true">فاتورة مبيعات</h2>
+  <header>
+    <img class="logo-new" src="https://i.postimg.cc/RVvsZjHH/c2903db7-d56a-470c-8ab4-84c592de2a63.jpg" alt="Logo" />
+    <h1>Pool Supplies</h1>
+    <p>أهلاً وسهلاً بكم في متجر مستلزمات المسابح</p>
+    <small>تواصلوا معنا عبر الرقم 0797610007</small>
+    <button id="scrollDownBtn" aria-label="انزل للمنتج الثاني">
+      <svg viewBox="0 0 24 24" >
+        <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/>
+      </svg>
+    </button>
+  </header>
 
-  <div class="info">
-    <div class="field">
-      <label>اسم العميل:</label>
-      <input type="text" id="clientName">
+  <div class="container">
+
+    <!-- المنتج الأول -->
+    <div class="product" data-product="1" id="product-1">
+      <img class="main-image" id="main-img-1" src="https://i.postimg.cc/kg5pfxjh/951-EA5-CA-AB53-4922-81-F5-1-BFAE3148-D30.png" alt="فلاتر مسبح" />
+
+      <div class="thumbnail-container" data-product="1">
+        <img class="thumbnail" src="https://i.postimg.cc/kg5pfxjh/951-EA5-CA-AB53-4922-81-F5-1-BFAE3148-D30.png" />
+        <img class="thumbnail" src="https://i.postimg.cc/rprgPg5g/868-A6710-F739-4-F0-F-818-F-09-D2510-A0257.jpg" />
+        <img class="thumbnail" src="https://i.postimg.cc/MT05WTPQ/High-Performance-Fiber-Glass-Swimming-Pool-Sand-Water-Filter-Pool-Equipment-Accessories.jpg" />
+        <img class="thumbnail" src="https://i.postimg.cc/SRyrjh3t/IMG-1135.jpg" />
+        <img class="thumbnail" src="https://i.postimg.cc/fLQ5nXKs/IMG-1783.jpg" />
+      </div>
+
+      <h3>فلاتر مسبح فيبر جلاس</h3>
+      <p>فلتر عالي الجودة لتنقية مياه المسابح، مصنوع من الفيبرجلاس المتين، يتحمّل الضغط ويتميز بسهولة الصيانة.</p>
+      <a class="whatsapp-btn" href="https://wa.me/962797610007?text=مرحباً، أريد الاستفسار عن فلاتر برك السباحة">تواصل واتساب</a>
     </div>
-    <div class="field">
-      <label>رقم الفاتورة:</label>
-      <input type="text" id="invoiceNumber">
+
+    <!-- المنتج الثاني -->
+    <div class="product" data-product="2" id="product-2">
+      <img class="main-image" id="main-img-2" src="https://i.postimg.cc/kg35Sv7K/pixelcut-export-1671142097940.png" alt="مضخات برك سباحة عالية الجودة" />
+      <div class="thumbnail-container" data-product="2">
+        <img class="thumbnail" src="https://i.postimg.cc/kg35Sv7K/pixelcut-export-1671142097940.png" />
+        <img class="thumbnail" src="https://i.postimg.cc/rmPVwShd/2-20240224-125747-0001.png" />
+        <img class="thumbnail" src="https://i.postimg.cc/NF2g95Vd/3-D6-FB657-119-B-428-E-AC1-D-948-BFE3729-FC.png" />
+        <img class="thumbnail" src="https://i.postimg.cc/Kzzcb95S/s-l500.png" />
+        <img class="thumbnail" src="https://i.postimg.cc/7LXPpv0n/self-priming-pumps.jpg" />
+        <img class="thumbnail" src="https://i.postimg.cc/8CTPKkJC/STP-Swimming-Pool-Pump-for-Circulation.jpg" />
+      </div>
+      <h3>مضخات برك سباحة عالية الجودة</h3>
+      <p>مجموعة متنوعة من مضخات المسابح المصممة لضمان أداء عالي وحماية المسبح بكفاءة.</p>
+      <a class="whatsapp-btn" href="https://wa.me/962797610007?text=مرحباً، أريد الاستفسار عن مضخات برك السباحة">تواصل واتساب</a>
     </div>
-    <div class="field">
-      <label>تاريخ الفاتورة:</label>
-      <input type="text" id="invoiceDate" readonly>
+
+    <!-- المنتج الثالث -->
+    <div class="product" data-product="3" id="product-3">
+      <img class="main-image" id="main-img-3" src="https://i.postimg.cc/BbbCxGcY/1721391169764.png" alt="عدة تنظيف برك السباحة" />
+      <div class="thumbnail-container" data-product="3">
+        <img class="thumbnail" src="https://i.postimg.cc/BbbCxGcY/1721391169764.png" />
+        <img class="thumbnail" src="https://i.postimg.cc/KzJNkYL3/1725176213204.png" />
+        <img class="thumbnail" src="https://i.postimg.cc/5yrSgksx/1725176288093.png" />
+        <img class="thumbnail" src="https://i.postimg.cc/Y9qNHwVr/1-AC56877-A2-BB-41-AA-88-CC-CADBCFB8-CC7-B.png" />
+        <img class="thumbnail" src="https://i.postimg.cc/C1F7x8ZV/5efd77b7959a6308030c0f3c-large.jpg" />
+        <img class="thumbnail" src="https://i.postimg.cc/MKcDHqGX/IMG-20240623-WA0016.jpg" />
+        <img class="thumbnail" src="https://i.postimg.cc/m20SFJcj/IMG-1971.jpg" />
+        <img class="thumbnail" src="https://i.postimg.cc/CK0Hc8sf/IMG-1972.jpg" />
+        <img class="thumbnail" src="https://i.postimg.cc/XvgKmvs1/IMG-1973.png" />
+        <img class="thumbnail" src="https://i.postimg.cc/Njmk8Dmc/IMG-3064.jpg" />
+        <img class="thumbnail" src="https://i.postimg.cc/05Xn9bPL/IMG-3065.jpg" />
+        <img class="thumbnail" src="https://i.postimg.cc/DyDxPmNq/net-from-pool-maintenance2.jpg" />
+        <img class="thumbnail" src="https://i.postimg.cc/y6LQWLXp/pool-water-test.jpg" />
+        <img class="thumbnail" src="https://i.postimg.cc/5NjPz8s4/pool-cleaning-leaves-net-800x.jpg" />
+        <img class="thumbnail" src="https://i.postimg.cc/Xv6xtm4q/Screenshot-20240701-162747.jpg" />
+        <img class="thumbnail" src="https://i.postimg.cc/wB5Fz2jV/Swimming-Pool-Leaf-Scoop-Daisy.png" />
+        <img class="thumbnail" src="https://i.postimg.cc/CxqmPSy9/T54.jpg" />
+      </div>
+      <h3>عدة تنظيف برك السباحة</h3>
+      <p>مجموعة شاملة من أدوات التنظيف للحفاظ على برك السباحة نظيفة وآمنة.</p>
+      <a class="whatsapp-btn" href="https://wa.me/962797610007?text=مرحباً، أريد الاستفسار عن عدة تنظيف برك السباحة">تواصل واتساب</a>
     </div>
+
   </div>
 
-  <table>
-    <thead>
-      <tr><th>رقم</th><th>البيان</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th></tr>
-    </thead>
-    <tbody id="invoiceBody"></tbody>
-  </table>
-
-  <div class="buttons">
-    <button onclick="addRow()">إضافة بند</button>
-    <button onclick="swapRows()">🔁 تبديل بندين</button>
-    <button onclick="saveInvoice()">💾 حفظ الفاتورة</button>
-    <button onclick="loadInvoice()">📂 تحميل الفاتورة</button>
-    <button onclick="window.print()">🖨️ طباعة</button>
-  </div>
-
-  <div class="total-footer">
-    <div id="discountInputRow">
-      <label>قيمة الخصم:</label>
-      <input type="number" id="discountValue" min="0" step="0.01" value="0" oninput="updateGrandTotal()" style="width:150px;">
-    </div>
-
-    <div id="paymentsSection">
-      <label>الدفعات:</label>
-      <input type="number" id="newPayment" min="0" step="0.01" placeholder="أدخل مبلغ دفعة" style="width:150px;">
-      <button onclick="addPayment()">➕ إضافة دفعة</button>
-      <div id="paymentsList"></div>
-    </div>
-
-    <div id="discountDisplay"></div>
-    <div>المجموع الكلي: <span id="grandTotal">0.00</span> د.أ</div>
-    <div>المجموع بعد الخصم: <span id="totalAfterDiscount">0.00</span> د.أ</div>
-    <div id="finalTotal">المبلغ النهائي بعد الدفعات: 0.00 د.أ</div>
-
-    <!-- قسم الملاحظات -->
-    <div id="notesSection" style="margin-top: 20px;">
-      <label for="notes" style="font-weight:bold;">ملاحظات:</label>
-      <textarea id="notes" rows="3" placeholder="أدخل أي ملاحظات إضافية..." style="width:100%; margin-top:5px;"></textarea>
-    </div>
-  </div>
-</div>
-
-<script>
-let payments = [];
-
-function addRow(data = {}) {
-  const table = document.getElementById("invoiceBody");
-  const row = table.insertRow();
-  row.innerHTML = `
-    <td></td>
-    <td><textarea>${data.desc || ''}</textarea></td>
-    <td><input type="number" min="0" value="${data.qty || ''}" oninput="updateTotal(this)"></td>
-    <td><input type="number" min="0" value="${data.price || ''}" oninput="updateTotal(this)"></td>
-    <td class="total">0.00</td>
-  `;
-  reNumberRows();
-  updateTotal(row.cells[2].querySelector("input"));
-}
-
-function reNumberRows() {
-  document.querySelectorAll("#invoiceBody tr").forEach((row, i) => row.cells[0].textContent = i + 1);
-}
-
-function updateTotal(input) {
-  const row = input.closest("tr");
-  const qty = parseFloat(row.cells[2].querySelector("input").value) || 0;
-  const price = parseFloat(row.cells[3].querySelector("input").value) || 0;
-  row.cells[4].textContent = (qty * price).toFixed(2);
-  updateGrandTotal();
-}
-
-function updateGrandTotal() {
-  let total = 0;
-  document.querySelectorAll(".total").forEach(cell => {
-    total += parseFloat(cell.textContent) || 0;
-  });
-
-  document.getElementById("grandTotal").textContent = total.toFixed(2);
-
-  const discountValue = parseFloat(document.getElementById("discountValue").value) || 0;
-  const discount = discountValue > total ? total : discountValue;
-
-  document.getElementById("discountDisplay").textContent =
-    discount > 0 ? `قيمة الخصم: ${discount.toFixed(2)} د.أ` : '';
-
-  const totalAfterDiscount = total - discount;
-  document.getElementById("totalAfterDiscount").textContent = totalAfterDiscount.toFixed(2);
-
-  const totalPayments = payments.reduce((sum, p) => sum + p.amount, 0);
-  let finalAmount = totalAfterDiscount - totalPayments;
-  if (finalAmount < 0) finalAmount = 0;
-
-  document.getElementById("finalTotal").textContent = `المبلغ النهائي بعد الدفعات: ${finalAmount.toFixed(2)} د.أ`;
-  renderPaymentsList();
-}
-
-function addPayment() {
-  const input = document.getElementById("newPayment");
-  const val = parseFloat(input.value);
-  if (isNaN(val) || val <= 0) return alert("أدخل مبلغ دفعة صحيح");
-  payments.push({ id: Date.now(), amount: val });
-  input.value = "";
-  updateGrandTotal();
-}
-
-function renderPaymentsList() {
-  const container = document.getElementById("paymentsList");
-  container.innerHTML = "";
-  if (payments.length === 0) {
-    container.textContent = "لا توجد دفعات بعد";
-    return;
-  }
-  payments.forEach(payment => {
-    const div = document.createElement("div");
-    div.textContent = `دفعة: ${payment.amount.toFixed(2)} د.أ`;
-    const btn = document.createElement("button");
-    btn.textContent = "حذف";
-    btn.onclick = () => {
-      payments = payments.filter(p => p.id !== payment.id);
-      updateGrandTotal();
-    };
-    div.appendChild(btn);
-    container.appendChild(div);
-  });
-}
-
-function swapRows() {
-  const rows = document.querySelectorAll("#invoiceBody tr");
-  if (rows.length < 2) return alert("يجب أن يكون هناك على الأقل بندين للتبديل.");
-
-  const index1 = parseInt(prompt("رقم البند الأول:")) - 1;
-  const index2 = parseInt(prompt("رقم البند الثاني:")) - 1;
-
-  if (
-    isNaN(index1) || isNaN(index2) ||
-    index1 < 0 || index2 < 0 ||
-    index1 >= rows.length || index2 >= rows.length
-  ) {
-    alert("أرقام البنود غير صحيحة.");
-    return;
-  }
-
-  if (index1 === index2) return;
-
-  const parent = rows[0].parentElement;
-  const temp = rows[index1].cloneNode(true);
-  parent.replaceChild(rows[index2].cloneNode(true), rows[index1]);
-  parent.replaceChild(temp, rows[index2]);
-
-  reNumberRows();
-  updateGrandTotal();
-}
-
-function saveInvoice() {
-  const number = document.getElementById("invoiceNumber").value;
-  if (!number) return alert("أدخل رقم الفاتورة أولاً");
-  const invoice = {
-    client: document.getElementById("clientName").value,
-    date: document.getElementById("invoiceDate").value,
-    discountValue: parseFloat(document.getElementById("discountValue").value) || 0,
-    payments,
-    notes: document.getElementById("notes").value,
-    items: []
-  };
-  document.querySelectorAll("#invoiceBody tr").forEach(row => {
-    invoice.items.push({
-      desc: row.cells[1].querySelector("textarea").value,
-      qty: row.cells[2].querySelector("input").value,
-      price: row.cells[3].querySelector("input").value
+  <script>
+    // التنقل للسفلي عند الضغط على السهم (ينزل للمنتج رقم 2)
+    document.getElementById('scrollDownBtn').addEventListener('click', () => {
+      document.getElementById('product-2').scrollIntoView({ behavior: 'smooth' });
     });
-  });
-  localStorage.setItem("invoice_" + number, JSON.stringify(invoice));
-  alert("تم حفظ الفاتورة");
-}
 
-function loadInvoice() {
-  const number = document.getElementById("invoiceNumber").value;
-  if (!number) return alert("أدخل رقم الفاتورة لتحميلها");
-  const data = localStorage.getItem("invoice_" + number);
-  if (!data) return alert("لا توجد فاتورة بهذا الرقم");
+    // تبديل الصورة الرئيسية عند الضغط على الصورة المصغرة
+    document.querySelectorAll('.thumbnail-container').forEach(container => {
+      container.addEventListener('click', e => {
+        if(e.target.classList.contains('thumbnail')) {
+          const productId = container.getAttribute('data-product');
+          const mainImg = document.getElementById(`main-img-${productId}`);
+          mainImg.src = e.target.src;
+          resetInterval(productId, e.target.src);
+        }
+      });
+    });
 
-  const invoice = JSON.parse(data);
-  document.getElementById("clientName").value = invoice.client;
-  document.getElementById("invoiceDate").value = invoice.date;
-  document.getElementById("discountValue").value = invoice.discountValue || 0;
-  document.getElementById("notes").value = invoice.notes || '';
-  payments = invoice.payments || [];
-  document.getElementById("invoiceBody").innerHTML = "";
-  invoice.items.forEach(item => addRow(item));
-  updateGrandTotal();
-}
+    // تقليب الصور تلقائيًا لكل منتج
+    const intervals = {};
+    const currentIndexes = {};
 
-window.onload = () => {
-  document.getElementById("invoiceDate").value = new Date().toLocaleDateString('ar-EG');
-  addRow();
-};
-</script>
+    document.querySelectorAll('.product').forEach(product => {
+      const productId = product.getAttribute('data-product');
+      const thumbnails = product.querySelectorAll('.thumbnail');
+      currentIndexes[productId] = 0;
+
+      intervals[productId] = setInterval(() => {
+        currentIndexes[productId]++;
+        if (currentIndexes[productId] >= thumbnails.length) {
+          currentIndexes[productId] = 0;
+        }
+        const mainImg = document.getElementById(`main-img-${productId}`);
+        mainImg.src = thumbnails[currentIndexes[productId]].src;
+      }, 3000);
+    });
+
+    function resetInterval(productId, newSrc) {
+      clearInterval(intervals[productId]);
+      const product = document.querySelector(`.product[data-product="${productId}"]`);
+      const thumbnails = product.querySelectorAll('.thumbnail');
+      const idx = Array.from(thumbnails).findIndex(img => img.src === newSrc);
+      currentIndexes[productId] = idx >= 0 ? idx : 0;
+
+      intervals[productId] = setInterval(() => {
+        currentIndexes[productId]++;
+        if (currentIndexes[productId] >= thumbnails.length) {
+          currentIndexes[productId] = 0;
+        }
+        const mainImg = document.getElementById(`main-img-${productId}`);
+        mainImg.src = thumbnails[currentIndexes[productId]].src;
+      }, 3000);
+    }
+  </script>
 
 </body>
 </html>
