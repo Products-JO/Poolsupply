@@ -20,7 +20,7 @@
       background: #0077b6;
       color: white;
       text-align: center;
-      padding: 20px 20px 60px 20px; /* مساحة للسهم */
+      padding: 20px 20px 60px 20px;
       position: relative;
     }
     header img.logo-new {
@@ -45,7 +45,7 @@
     /* زر السهم */
     #scrollDownBtn {
       position: absolute;
-      bottom: 15px; /* تحت النص */
+      bottom: 15px;
       left: 50%;
       transform: translateX(-50%);
       background: rgba(255, 255, 255, 0.8);
@@ -64,7 +64,6 @@
     #scrollDownBtn:hover {
       background: rgba(255, 255, 255, 1);
     }
-    /* شكل السهم */
     #scrollDownBtn svg {
       width: 20px;
       height: 20px;
@@ -126,7 +125,6 @@
       font-weight: bold;
     }
 
-    /* الفوتر */
     footer {
       background: #0077b6;
       color: white;
@@ -155,7 +153,7 @@
 
     <!-- المنتج الأول -->
     <div class="product" data-product="1" id="product-1">
-      <img class="main-image" id="main-img-1" src="https://i.postimg.cc/kg5pfxjh/951-EA5-CA-AB53-4922-81-F5-1-BFAE3148-D30.png" alt="فلاتر مسبح" />
+      <img class="main-image" id="main-img-1" src="https://i.postimg.cc/kg5pfxjh/951-EA5-CA-AB53-4922-81-F5-1-BFAE3148-D30.png" alt="فلاتر برك السباحة" />
 
       <div class="thumbnail-container" data-product="1">
         <img class="thumbnail" src="https://i.postimg.cc/kg5pfxjh/951-EA5-CA-AB53-4922-81-F5-1-BFAE3148-D30.png" />
@@ -165,14 +163,14 @@
         <img class="thumbnail" src="https://i.postimg.cc/fLQ5nXKs/IMG-1783.jpg" />
       </div>
 
-      <h3>فلاتر مسبح فيبر جلاس</h3>
+      <h3>فلاتر برك السباحة عالية الجودة</h3>
       <p>فلتر عالي الجودة لتنقية مياه المسابح، مصنوع من الفيبرجلاس المتين، يتحمّل الضغط ويتميز بسهولة الصيانة.</p>
       <a class="whatsapp-btn" href="https://wa.me/962797610007?text=مرحباً، أريد الاستفسار عن فلاتر برك السباحة">تواصل واتساب</a>
     </div>
 
     <!-- المنتج الثاني -->
     <div class="product" data-product="2" id="product-2">
-      <img class="main-image" id="main-img-2" src="https://i.postimg.cc/kg35Sv7K/pixelcut-export-1671142097940.png" alt="مضخات برك سباحة عالية الجودة" />
+      <img class="main-image" id="main-img-2" src="https://i.postimg.cc/kg35Sv7K/pixelcut-export-1671142097940.png" alt="مضخات عالية الجودة" />
       <div class="thumbnail-container" data-product="2">
         <img class="thumbnail" src="https://i.postimg.cc/kg35Sv7K/pixelcut-export-1671142097940.png" />
         <img class="thumbnail" src="https://i.postimg.cc/rmPVwShd/2-20240224-125747-0001.png" />
@@ -181,7 +179,7 @@
         <img class="thumbnail" src="https://i.postimg.cc/7LXPpv0n/self-priming-pumps.jpg" />
         <img class="thumbnail" src="https://i.postimg.cc/8CTPKkJC/STP-Swimming-Pool-Pump-for-Circulation.jpg" />
       </div>
-      <h3>مضخات برك سباحة عالية الجودة</h3>
+      <h3>مضخات عالية الجودة</h3>
       <p>مجموعة متنوعة من مضخات المسابح المصممة لضمان أداء عالي وحماية المسبح بكفاءة.</p>
       <a class="whatsapp-btn" href="https://wa.me/962797610007?text=مرحباً، أريد الاستفسار عن مضخات برك السباحة">تواصل واتساب</a>
     </div>
@@ -220,12 +218,10 @@
   </footer>
 
   <script>
-    // التنقل للسفلي عند الضغط على السهم (ينزل للمنتج رقم 2)
     document.getElementById('scrollDownBtn').addEventListener('click', () => {
       document.getElementById('product-2').scrollIntoView({ behavior: 'smooth' });
     });
 
-    // تبديل الصورة الرئيسية عند الضغط على الصورة المصغرة
     document.querySelectorAll('.thumbnail-container').forEach(container => {
       container.addEventListener('click', e => {
         if(e.target.classList.contains('thumbnail')) {
@@ -237,7 +233,6 @@
       });
     });
 
-    // تقليب الصور تلقائيًا لكل منتج
     const intervals = {};
     const currentIndexes = {};
 
