@@ -1,138 +1,181 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Pool Supplies</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       direction: rtl;
+      margin: 0; padding: 0;
       background: #f8f8f8;
-      margin: 0;
-      padding: 0;
-      scroll-behavior: smooth;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
     }
     header {
       background: #0077b6;
       color: white;
       text-align: center;
-      padding: 20px 20px 60px 20px;
+      padding: 20px;
       position: relative;
     }
     header img.logo-new {
       width: 120px;
-      display: block;
       margin: 0 auto 10px;
+      display: block;
       border-radius: 8px;
     }
-    h1 {
-      margin: 10px 0 5px;
+    header h1 {
+      margin: 5px 0;
     }
-    p {
-      margin: 0;
-    }
-    header small {
-      color: rgba(255, 255, 255, 0.8);
-      display: block;
-      margin-top: 5px;
-      font-size: 0.9rem;
+    header p, header small {
+      margin: 2px 0;
+      font-weight: normal;
+      opacity: 0.9;
     }
 
-    /* زر السهم */
-    #scrollDownBtn {
-      position: absolute;
-      bottom: 15px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(255, 255, 255, 0.8);
+    /* زر المنتجات */
+    .dropdown {
+      position: relative;
+      margin: 20px auto;
+      width: 180px;
+    }
+    .dropbtn {
+      background: #0096d6;
+      color: white;
       border: none;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
+      border-radius: 5px;
+      padding: 12px;
+      width: 100%;
+      font-weight: bold;
+      font-size: 1.1rem;
       cursor: pointer;
-      box-shadow: 0 0 5px rgba(0,0,0,0.2);
       display: flex;
       justify-content: center;
       align-items: center;
-      transition: background 0.3s ease;
+      gap: 6px;
+      user-select: none;
+    }
+    .dropbtn svg {
+      width: 16px;
+      height: 16px;
+      fill: white;
+      transition: transform 0.3s ease;
+    }
+    .dropdown.open .dropbtn svg {
+      transform: rotate(180deg);
+    }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      background: white;
+      border-radius: 5px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      width: 100%;
       z-index: 10;
     }
-    #scrollDownBtn:hover {
-      background: rgba(255, 255, 255, 1);
+    .dropdown-content a {
+      display: block;
+      padding: 12px;
+      color: #0077b6;
+      text-decoration: none;
+      font-weight: normal;
+      cursor: pointer;
     }
-    #scrollDownBtn svg {
-      width: 20px;
-      height: 20px;
-      fill: #0077b6;
+    .dropdown-content a:hover {
+      background: #e0f0ff;
+    }
+    .dropdown.open .dropdown-content {
+      display: block;
     }
 
-    .container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      padding: 20px;
-      scroll-margin-top: 80px;
-      flex-grow: 1;
+    /* محتوى المنتجات */
+    #productList {
+      max-width: 700px;
+      margin: 20px auto;
+      padding: 0 20px;
+      display: block;
     }
-    .product {
+    .product-summary {
       background: white;
       border-radius: 10px;
       padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      cursor: pointer;
       text-align: center;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      font-weight: bold;
+      color: #0077b6;
     }
-    .main-image {
-      width: 100%;
+
+    /* صفحة المنتج */
+    .product {
+      display: none;
+      max-width: 700px;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .product.active {
+      display: block;
+    }
+    .product img.main-image {
+      max-width: 100%;
       height: 300px;
       object-fit: contain;
+      margin-bottom: 15px;
+      border-radius: 8px;
       background: #fff;
-      border-radius: 10px;
-      margin-bottom: 10px;
-      transition: all 0.3s ease-in-out;
     }
+    .back-btn {
+      background: #0077b6;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px; /* بدل margin-bottom */
+      font-weight: bold;
+    }
+    .whatsapp-btn {
+      background: #25d366;
+      color: white;
+      padding: 12px 20px;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+      display: inline-block;
+      margin-top: 10px;
+    }
+
+    /* معرض الصور المصغرة */
     .thumbnail-container {
       display: flex;
       justify-content: center;
-      gap: 5px;
+      gap: 8px;
       flex-wrap: wrap;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
     }
     .thumbnail {
-      width: 50px;
-      height: 50px;
+      width: 60px;
+      height: 60px;
       object-fit: contain;
-      border: 1px solid #ccc;
+      border: 2px solid transparent;
       border-radius: 5px;
       cursor: pointer;
-      transition: transform 0.2s;
       background: #fff;
+      transition: border-color 0.3s ease;
     }
-    .thumbnail:hover {
-      transform: scale(1.1);
+    .thumbnail.selected {
       border-color: #0077b6;
     }
-    .whatsapp-btn {
-      display: inline-block;
-      padding: 10px 15px;
-      background: #25d366;
-      color: white;
-      text-decoration: none;
-      border-radius: 5px;
-      font-weight: bold;
+    .thumbnail:hover {
+      border-color: #0096d6;
     }
 
-    footer {
-      background: #0077b6;
-      color: white;
-      text-align: center;
-      padding: 15px 10px;
-      font-size: 0.9rem;
-      margin-top: auto;
-    }
   </style>
 </head>
 <body>
@@ -141,133 +184,191 @@
     <img class="logo-new" src="https://i.postimg.cc/RVvsZjHH/c2903db7-d56a-470c-8ab4-84c592de2a63.jpg" alt="Logo" />
     <h1>Pool Supplies</h1>
     <p>أهلاً وسهلاً بكم في متجر مستلزمات المسابح</p>
-    <small>تواصلو معنا عبر الرقم 0797610007</small>
-    <button id="scrollDownBtn" aria-label="انزل للمنتج الثاني">
-      <svg viewBox="0 0 24 24" >
-        <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/>
-      </svg>
-    </button>
+    <small>تواصلوا معنا عبر الرقم 0797610007</small>
+
+    <div class="dropdown" id="productsDropdown">
+      <button class="dropbtn" id="productsBtn">
+        المنتجات
+        <svg viewBox="0 0 24 24">
+          <path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/>
+        </svg>
+      </button>
+      <div class="dropdown-content" id="dropdownContent">
+        <a data-product="1">🛠️ فلاتر</a>
+        <a data-product="2">🔧 مضخات</a>
+        <a data-product="3">🧹 عدد تنظيف البرك</a>
+        <a data-product="4">🧴 مواد تعقيم برك السباحة</a>
+      </div>
+    </div>
   </header>
 
-  <div class="container">
+  <main>
+    <!-- قائمة المنتجات -->
+    <div id="productList">
+      <div class="product-summary" data-product="1">🛠️ فلاتر برك السباحة</div>
+      <div class="product-summary" data-product="2">🔧 مضخات برك السباحة</div>
+      <div class="product-summary" data-product="3">🧹 عدد تنظيف البرك</div>
+      <div class="product-summary" data-product="4">🧴 مواد تعقيم برك السباحة</div>
+    </div>
 
-    <!-- المنتج الأول -->
-    <div class="product" data-product="1" id="product-1">
-      <img class="main-image" id="main-img-1" src="https://i.postimg.cc/kg5pfxjh/951-EA5-CA-AB53-4922-81-F5-1-BFAE3148-D30.png" alt="فلاتر برك السباحة" />
+    <!-- صفحات المنتجات -->
+    <div class="product" id="product-1">
+      <img class="main-image" id="main-img-1" src="https://i.postimg.cc/kg5pfxjh/951-EA5-CA-AB53-4922-81-F5-1-BFAE3148-D30.png" alt="فلاتر" />
 
       <div class="thumbnail-container" data-product="1">
-        <img class="thumbnail" src="https://i.postimg.cc/kg5pfxjh/951-EA5-CA-AB53-4922-81-F5-1-BFAE3148-D30.png" />
-        <img class="thumbnail" src="https://i.postimg.cc/rprgPg5g/868-A6710-F739-4-F0-F-818-F-09-D2510-A0257.jpg" />
-        <img class="thumbnail" src="https://i.postimg.cc/MT05WTPQ/High-Performance-Fiber-Glass-Swimming-Pool-Sand-Water-Filter-Pool-Equipment-Accessories.jpg" />
-        <img class="thumbnail" src="https://i.postimg.cc/SRyrjh3t/IMG-1135.jpg" />
-        <img class="thumbnail" src="https://i.postimg.cc/fLQ5nXKs/IMG-1783.jpg" />
+        <img class="thumbnail selected" src="https://i.postimg.cc/kg5pfxjh/951-EA5-CA-AB53-4922-81-F5-1-BFAE3148-D30.png" alt="فلتر 1" />
+        <img class="thumbnail" src="https://i.postimg.cc/rprgPg5g/868-A6710-F739-4-F0-F-818-F-09-D2510-A0257.jpg" alt="فلتر 2" />
+        <img class="thumbnail" src="https://i.postimg.cc/MT05WTPQ/High-Performance-Fiber-Glass-Swimming-Pool-Sand-Water-Filter-Pool-Equipment-Accessories.jpg" alt="فلتر 3" />
+        <img class="thumbnail" src="https://i.postimg.cc/SRyrjh3t/IMG-1135.jpg" alt="فلتر 4" />
+        <img class="thumbnail" src="https://i.postimg.cc/fLQ5nXKs/IMG-1783.jpg" alt="فلتر 5" />
       </div>
 
-      <h3>فلاتر برك السباحة عالية الجودة</h3>
+      <button class="back-btn">رجوع إلى قائمة المنتجات</button>
+
+      <h2>فلاتر برك السباحة</h2>
       <p>فلتر عالي الجودة لتنقية مياه المسابح، مصنوع من الفيبرجلاس المتين، يتحمّل الضغط ويتميز بسهولة الصيانة.</p>
-      <a class="whatsapp-btn" href="https://wa.me/962797610007?text=مرحباً، أريد الاستفسار عن فلاتر برك السباحة">تواصل واتساب</a>
+      <a class="whatsapp-btn" href="https://wa.me/962797610007?text=مرحباً، أريد الاستفسار عن فلاتر برك السباحة" target="_blank" rel="noopener noreferrer">تواصل واتساب</a>
     </div>
 
-    <!-- المنتج الثاني -->
-    <div class="product" data-product="2" id="product-2">
-      <img class="main-image" id="main-img-2" src="https://i.postimg.cc/kg35Sv7K/pixelcut-export-1671142097940.png" alt="مضخات عالية الجودة" />
+    <div class="product" id="product-2">
+      <img class="main-image" id="main-img-2" src="https://i.postimg.cc/kg35Sv7K/pixelcut-export-1671142097940.png" alt="مضخات" />
+
       <div class="thumbnail-container" data-product="2">
-        <img class="thumbnail" src="https://i.postimg.cc/kg35Sv7K/pixelcut-export-1671142097940.png" />
-        <img class="thumbnail" src="https://i.postimg.cc/rmPVwShd/2-20240224-125747-0001.png" />
-        <img class="thumbnail" src="https://i.postimg.cc/NF2g95Vd/3-D6-FB657-119-B-428-E-AC1-D-948-BFE3729-FC.png" />
-        <img class="thumbnail" src="https://i.postimg.cc/Kzzcb95S/s-l500.png" />
-        <img class="thumbnail" src="https://i.postimg.cc/7LXPpv0n/self-priming-pumps.jpg" />
-        <img class="thumbnail" src="https://i.postimg.cc/8CTPKkJC/STP-Swimming-Pool-Pump-for-Circulation.jpg" />
+        <img class="thumbnail selected" src="https://i.postimg.cc/kg35Sv7K/pixelcut-export-1671142097940.png" alt="مضخة 1" />
+   
+        <img class="thumbnail" src="https://i.postimg.cc/NF2g95Vd/3-D6-FB657-119-B-428-E-AC1-D-948-BFE3729-FC.png" alt="مضخة 3" />
+        <img class="thumbnail" src="https://i.postimg.cc/Kzzcb95S/s-l500.png" alt="مضخة 4" />
+        <img class="thumbnail" src="https://i.postimg.cc/7LXPpv0n/self-priming-pumps.jpg" alt="مضخة 5" />
+        <img class="thumbnail" src="https://i.postimg.cc/8CTPKkJC/STP-Swimming-Pool-Pump-for-Circulation.jpg" alt="مضخة 6" />
       </div>
-      <h3>مضخات عالية الجودة</h3>
+
+      <button class="back-btn">رجوع إلى قائمة المنتجات</button>
+
+      <h2>مضخات برك السباحة</h2>
       <p>مجموعة متنوعة من مضخات المسابح المصممة لضمان أداء عالي وحماية المسبح بكفاءة.</p>
-      <a class="whatsapp-btn" href="https://wa.me/962797610007?text=مرحباً، أريد الاستفسار عن مضخات برك السباحة">تواصل واتساب</a>
+      <a class="whatsapp-btn" href="https://wa.me/962797610007?text=مرحباً، أريد الاستفسار عن مضخات برك السباحة" target="_blank" rel="noopener noreferrer">تواصل واتساب</a>
     </div>
 
-    <!-- المنتج الثالث -->
-    <div class="product" data-product="3" id="product-3">
-      <img class="main-image" id="main-img-3" src="https://i.postimg.cc/BbbCxGcY/1721391169764.png" alt="عدة تنظيف برك السباحة" />
+    <div class="product" id="product-3">
+      <img class="main-image" id="main-img-3" src="https://i.postimg.cc/BbbCxGcY/1721391169764.png" alt="عدد تنظيف البرك" />
+
       <div class="thumbnail-container" data-product="3">
-        <img class="thumbnail" src="https://i.postimg.cc/BbbCxGcY/1721391169764.png" />
-        <img class="thumbnail" src="https://i.postimg.cc/KzJNkYL3/1725176213204.png" />
-        <img class="thumbnail" src="https://i.postimg.cc/5yrSgksx/1725176288093.png" />
-        <img class="thumbnail" src="https://i.postimg.cc/Y9qNHwVr/1-AC56877-A2-BB-41-AA-88-CC-CADBCFB8-CC7-B.png" />
-        <img class="thumbnail" src="https://i.postimg.cc/C1F7x8ZV/5efd77b7959a6308030c0f3c-large.jpg" />
-        <img class="thumbnail" src="https://i.postimg.cc/MKcDHqGX/IMG-20240623-WA0016.jpg" />
-        <img class="thumbnail" src="https://i.postimg.cc/m20SFJcj/IMG-1971.jpg" />
-        <img class="thumbnail" src="https://i.postimg.cc/CK0Hc8sf/IMG-1972.jpg" />
-        <img class="thumbnail" src="https://i.postimg.cc/XvgKmvs1/IMG-1973.png" />
-        <img class="thumbnail" src="https://i.postimg.cc/Njmk8Dmc/IMG-3064.jpg" />
-        <img class="thumbnail" src="https://i.postimg.cc/05Xn9bPL/IMG-3065.jpg" />
-        <img class="thumbnail" src="https://i.postimg.cc/DyDxPmNq/net-from-pool-maintenance2.jpg" />
-        <img class="thumbnail" src="https://i.postimg.cc/y6LQWLXp/pool-water-test.jpg" />
-        <img class="thumbnail" src="https://i.postimg.cc/5NjPz8s4/pool-cleaning-leaves-net-800x.jpg" />
-        <img class="thumbnail" src="https://i.postimg.cc/Xv6xtm4q/Screenshot-20240701-162747.jpg" />
-        <img class="thumbnail" src="https://i.postimg.cc/wB5Fz2jV/Swimming-Pool-Leaf-Scoop-Daisy.png" />
-        <img class="thumbnail" src="https://i.postimg.cc/CxqmPSy9/T54.jpg" />
+        <img class="thumbnail selected" src="https://i.postimg.cc/BbbCxGcY/1721391169764.png" alt="عدة 1" />
+
+        <img class="thumbnail" src="https://i.postimg.cc/5yrSgksx/1725176288093.png" alt="عدة 3" />
+        <img class="thumbnail" src="https://i.postimg.cc/Y9qNHwVr/1-AC56877-A2-BB-41-AA-88-CC-CADBCFB8-CC7-B.png" alt="عدة 4" />
+        <img class="thumbnail" src="https://i.postimg.cc/C1F7x8ZV/5efd77b7959a6308030c0f3c-large.jpg" alt="عدة 5" />
+        <img class="thumbnail" src="https://i.postimg.cc/MKcDHqGX/IMG-20240623-WA0016.jpg" alt="عدة 6" />
+        <img class="thumbnail" src="https://i.postimg.cc/m20SFJcj/IMG-1971.jpg" alt="عدة 7" />
+        <img class="thumbnail" src="https://i.postimg.cc/CK0Hc8sf/IMG-1972.jpg" alt="عدة 8" />
+        <img class="thumbnail" src="https://i.postimg.cc/XvgKmvs1/IMG-1973.png" alt="عدة 9" />
+        <img class="thumbnail" src="https://i.postimg.cc/Njmk8Dmc/IMG-3064.jpg" alt="عدة 10" />
+        <img class="thumbnail" src="https://i.postimg.cc/05Xn9bPL/IMG-3065.jpg" alt="عدة 11" />
+        <img class="thumbnail" src="https://i.postimg.cc/DyDxPmNq/net-from-pool-maintenance2.jpg" alt="عدة 12" />
+        <img class="thumbnail" src="https://i.postimg.cc/y6LQWLXp/pool-water-test.jpg" alt="عدة 13" />
+        <img class="thumbnail" src="https://i.postimg.cc/5NjPz8s4/pool-cleaning-leaves-net-800x.jpg" alt="عدة 14" />
+        <img class="thumbnail" src="https://i.postimg.cc/Xv6xtm4q/Screenshot-20240701-162747.jpg" alt="عدة 15" />
+        <img class="thumbnail" src="https://i.postimg.cc/wB5Fz2jV/Swimming-Pool-Leaf-Scoop-Daisy.png" alt="عدة 16" />
+        
       </div>
-      <h3>عدة تنظيف برك السباحة</h3>
+
+      <button class="back-btn">رجوع إلى قائمة المنتجات</button>
+
+      <h2>عدد تنظيف البرك</h2>
       <p>مجموعة شاملة من أدوات التنظيف للحفاظ على برك السباحة نظيفة وآمنة.</p>
-      <a class="whatsapp-btn" href="https://wa.me/962797610007?text=مرحباً، أريد الاستفسار عن عدة تنظيف برك السباحة">تواصل واتساب</a>
+      <a class="whatsapp-btn" href="https://wa.me/962797610007?text=مرحباً، أريد الاستفسار عن عدد تنظيف البرك" target="_blank" rel="noopener noreferrer">تواصل واتساب</a>
     </div>
 
-  </div>
+    <div class="product" id="product-4">
+      <img class="main-image" id="main-img-4" src="https://i.postimg.cc/Y99pwc1c/IMG-20240623-WA0016.jpg" alt="مواد تعقيم برك السباحة" />
 
-  <footer>
-    جميع الحقوق محفوظة © 2025 - متجر Pool Supplies لمستلزمات المسابح
-  </footer>
+      <div class="thumbnail-container" data-product="4">
+        <img class="thumbnail selected" src="https://i.postimg.cc/Y99pwc1c/IMG-20240623-WA0016.jpg" alt="تعقيم 1" />
+        <img class="thumbnail" src="https://i.postimg.cc/PNGhZP0h/801-E12-CB-45-C0-409-B-88-E0-77-EE98-A0-EFD0.png" alt="تعقيم 2" />
+        <img class="thumbnail" src="https://i.postimg.cc/Vk80P6v3/B88088-A3-19-DE-4-EA7-9-C83-80943-C930-B2-E.png" alt="تعقيم 3" />
+        <img class="thumbnail" src="https://i.postimg.cc/kM2bxzLh/checking-pool-chemical-levels-900x600.jpg" alt="تعقيم 4" />
+        <img class="thumbnail" src="https://i.postimg.cc/gc1644Wc/pool-water-test.jpg" alt="تعقيم 5" />
+      </div>
+
+      <button class="back-btn">رجوع إلى قائمة المنتجات</button>
+
+      <h2>مواد تعقيم برك السباحة</h2>
+      <p>مجموعة متكاملة من مواد التعقيم للحفاظ على مياه البرك صحية ونظيفة وخالية من الجراثيم.</p>
+      <a class="whatsapp-btn" href="https://wa.me/962797610007?text=مرحباً، أريد الاستفسار عن مواد تعقيم برك السباحة" target="_blank" rel="noopener noreferrer">تواصل واتساب</a>
+    </div>
+  </main>
 
   <script>
-    document.getElementById('scrollDownBtn').addEventListener('click', () => {
-      document.getElementById('product-2').scrollIntoView({ behavior: 'smooth' });
+    // فتح وغلق قائمة المنتجات
+    const dropdown = document.getElementById('productsDropdown');
+    const productsBtn = document.getElementById('productsBtn');
+    const dropdownContent = document.getElementById('dropdownContent');
+    const productList = document.getElementById('productList');
+    const products = document.querySelectorAll('.product');
+    const productSummaries = document.querySelectorAll('.product-summary');
+
+    productsBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      dropdown.classList.toggle('open');
+    });
+    window.addEventListener('click', () => {
+      dropdown.classList.remove('open');
     });
 
-    document.querySelectorAll('.thumbnail-container').forEach(container => {
-      container.addEventListener('click', e => {
-        if(e.target.classList.contains('thumbnail')) {
-          const productId = container.getAttribute('data-product');
-          const mainImg = document.getElementById(`main-img-${productId}`);
-          mainImg.src = e.target.src;
-          resetInterval(productId, e.target.src);
-        }
+    // اختيار منتج من القائمة المنسدلة
+    dropdownContent.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        const prodId = link.getAttribute('data-product');
+        showProduct(prodId);
+        dropdown.classList.remove('open');
       });
     });
 
-    const intervals = {};
-    const currentIndexes = {};
-
-    document.querySelectorAll('.product').forEach(product => {
-      const productId = product.getAttribute('data-product');
-      const thumbnails = product.querySelectorAll('.thumbnail');
-      currentIndexes[productId] = 0;
-
-      intervals[productId] = setInterval(() => {
-        currentIndexes[productId]++;
-        if (currentIndexes[productId] >= thumbnails.length) {
-          currentIndexes[productId] = 0;
-        }
-        const mainImg = document.getElementById(`main-img-${productId}`);
-        mainImg.src = thumbnails[currentIndexes[productId]].src;
-      }, 3000);
+    // اختيار ملخص منتج من قائمة المنتجات
+    productSummaries.forEach(summary => {
+      summary.addEventListener('click', () => {
+        const prodId = summary.getAttribute('data-product');
+        showProduct(prodId);
+      });
     });
 
-    function resetInterval(productId, newSrc) {
-      clearInterval(intervals[productId]);
-      const product = document.querySelector(`.product[data-product="${productId}"]`);
-      const thumbnails = product.querySelectorAll('.thumbnail');
-      const idx = Array.from(thumbnails).findIndex(img => img.src === newSrc);
-      currentIndexes[productId] = idx >= 0 ? idx : 0;
+    // زر رجوع في صفحة المنتج
+    document.querySelectorAll('.back-btn').forEach(btn => {
+     
+    btn.addEventListener('click', () => {
+      products.forEach(p => p.classList.remove('active'));
+      productList.style.display = 'block';
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+  });
 
-      intervals[productId] = setInterval(() => {
-        currentIndexes[productId]++;
-        if (currentIndexes[productId] >= thumbnails.length) {
-          currentIndexes[productId] = 0;
-        }
-        const mainImg = document.getElementById(`main-img-${productId}`);
-        mainImg.src = thumbnails[currentIndexes[productId]].src;
-      }, 3000);
+  // دالة عرض المنتج وإخفاء القائمة
+  function showProduct(prodId) {
+    productList.style.display = 'none';
+    products.forEach(p => p.classList.remove('active'));
+    const activeProduct = document.getElementById('product-' + prodId);
+    if (activeProduct) {
+      activeProduct.classList.add('active');
+      activeProduct.scrollIntoView({behavior: 'smooth'});
     }
-  </script>
+  }
+
+  // تعامل مع صور المعرض المصغر لكل منتج
+  document.querySelectorAll('.thumbnail-container').forEach(container => {
+    const productId = container.getAttribute('data-product');
+    const mainImg = document.getElementById('main-img-' + productId);
+    const thumbnails = container.querySelectorAll('.thumbnail');
+
+    thumbnails.forEach(thumb => {
+      thumb.addEventListener('click', () => {
+        mainImg.src = thumb.src;
+        thumbnails.forEach(t => t.classList.remove('selected'));
+        thumb.classList.add('selected');
+      });
+    });
+  });
+</script>
 
 </body>
 </html>
