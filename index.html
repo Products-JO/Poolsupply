@@ -10,6 +10,9 @@
       direction: rtl;
       margin: 0; padding: 0;
       background: #f8f8f8;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
     header {
       background: #0077b6;
@@ -95,6 +98,7 @@
       margin: 20px auto;
       padding: 0 20px;
       display: block;
+      flex-grow: 1;
     }
     .product-summary {
       background: white;
@@ -176,6 +180,15 @@
       border-color: #0096d6;
     }
 
+    /* الفوتر */
+    footer {
+      background: #0077b6;
+      color: white;
+      text-align: center;
+      padding: 12px 20px;
+      font-size: 0.9rem;
+      user-select: none;
+    }
   </style>
 </head>
 <body>
@@ -235,7 +248,7 @@
 
       <div class="thumbnail-container" data-product="2">
         <img class="thumbnail selected" src="https://i.postimg.cc/kg35Sv7K/pixelcut-export-1671142097940.png" alt="مضخة 1" />
-   
+        <img class="thumbnail" src="https://i.postimg.cc/rmPVwShd/2-20240224-125747-0001.png" alt="مضخة 2" />
         <img class="thumbnail" src="https://i.postimg.cc/NF2g95Vd/3-D6-FB657-119-B-428-E-AC1-D-948-BFE3729-FC.png" alt="مضخة 3" />
         <img class="thumbnail" src="https://i.postimg.cc/Kzzcb95S/s-l500.png" alt="مضخة 4" />
         <img class="thumbnail" src="https://i.postimg.cc/7LXPpv0n/self-priming-pumps.jpg" alt="مضخة 5" />
@@ -254,7 +267,7 @@
 
       <div class="thumbnail-container" data-product="3">
         <img class="thumbnail selected" src="https://i.postimg.cc/BbbCxGcY/1721391169764.png" alt="عدة 1" />
-
+        <img class="thumbnail" src="https://i.postimg.cc/KzJNkYL3/1725176213204.png" alt="عدة 2" />
         <img class="thumbnail" src="https://i.postimg.cc/5yrSgksx/1725176288093.png" alt="عدة 3" />
         <img class="thumbnail" src="https://i.postimg.cc/Y9qNHwVr/1-AC56877-A2-BB-41-AA-88-CC-CADBCFB8-CC7-B.png" alt="عدة 4" />
         <img class="thumbnail" src="https://i.postimg.cc/C1F7x8ZV/5efd77b7959a6308030c0f3c-large.jpg" alt="عدة 5" />
@@ -269,7 +282,7 @@
         <img class="thumbnail" src="https://i.postimg.cc/5NjPz8s4/pool-cleaning-leaves-net-800x.jpg" alt="عدة 14" />
         <img class="thumbnail" src="https://i.postimg.cc/Xv6xtm4q/Screenshot-20240701-162747.jpg" alt="عدة 15" />
         <img class="thumbnail" src="https://i.postimg.cc/wB5Fz2jV/Swimming-Pool-Leaf-Scoop-Daisy.png" alt="عدة 16" />
-        
+        <img class="thumbnail" src="https://i.postimg.cc/CxqmPSy9/T54.jpg" alt="عدة 17" />
       </div>
 
       <button class="back-btn">رجوع إلى قائمة المنتجات</button>
@@ -297,6 +310,10 @@
       <a class="whatsapp-btn" href="https://wa.me/962797610007?text=مرحباً، أريد الاستفسار عن مواد تعقيم برك السباحة" target="_blank" rel="noopener noreferrer">تواصل واتساب</a>
     </div>
   </main>
+
+  <footer>
+    © جميع الحقوق محفوظة - Pool Supplies 2025
+  </footer>
 
   <script>
     // فتح وغلق قائمة المنتجات
@@ -335,40 +352,39 @@
 
     // زر رجوع في صفحة المنتج
     document.querySelectorAll('.back-btn').forEach(btn => {
-     
-    btn.addEventListener('click', () => {
-      products.forEach(p => p.classList.remove('active'));
-      productList.style.display = 'block';
-      window.scrollTo({top:0, behavior:'smooth'});
-    });
-  });
-
-  // دالة عرض المنتج وإخفاء القائمة
-  function showProduct(prodId) {
-    productList.style.display = 'none';
-    products.forEach(p => p.classList.remove('active'));
-    const activeProduct = document.getElementById('product-' + prodId);
-    if (activeProduct) {
-      activeProduct.classList.add('active');
-      activeProduct.scrollIntoView({behavior: 'smooth'});
-    }
-  }
-
-  // تعامل مع صور المعرض المصغر لكل منتج
-  document.querySelectorAll('.thumbnail-container').forEach(container => {
-    const productId = container.getAttribute('data-product');
-    const mainImg = document.getElementById('main-img-' + productId);
-    const thumbnails = container.querySelectorAll('.thumbnail');
-
-    thumbnails.forEach(thumb => {
-      thumb.addEventListener('click', () => {
-        mainImg.src = thumb.src;
-        thumbnails.forEach(t => t.classList.remove('selected'));
-        thumb.classList.add('selected');
+      btn.addEventListener('click', () => {
+        products.forEach(p => p.classList.remove('active'));
+        productList.style.display = 'block';
+        window.scrollTo({top:0, behavior:'smooth'});
       });
     });
-  });
-</script>
+
+    // دالة عرض المنتج وإخفاء القائمة
+    function showProduct(prodId) {
+      productList.style.display = 'none';
+      products.forEach(p => p.classList.remove('active'));
+      const activeProduct = document.getElementById('product-' + prodId);
+      if (activeProduct) {
+        activeProduct.classList.add('active');
+        activeProduct.scrollIntoView({behavior: 'smooth'});
+      }
+    }
+
+    // تعامل مع صور المعرض المصغر لكل منتج
+    document.querySelectorAll('.thumbnail-container').forEach(container => {
+      const productId = container.getAttribute('data-product');
+      const mainImg = document.getElementById('main-img-' + productId);
+      const thumbnails = container.querySelectorAll('.thumbnail');
+
+      thumbnails.forEach(thumb => {
+        thumb.addEventListener('click', () => {
+          mainImg.src = thumb.src;
+          thumbnails.forEach(t => t.classList.remove('selected'));
+          thumb.classList.add('selected');
+        });
+      });
+    });
+  </script>
 
 </body>
 </html>
