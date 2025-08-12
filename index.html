@@ -15,7 +15,7 @@
       flex-direction: column;
     }
     header {
-      background: #0077b6;
+      background: #4fc3f7; /* تم التغيير هنا للون السماوي */
       color: white;
       text-align: center;
       padding: 20px;
@@ -340,49 +340,66 @@
       link.addEventListener('click', e => {
         e.preventDefault();
         const prodId = link.getAttribute('data-product');
-        showProduct(prodId);
+
+        // إخفاء قائمة المنتجات
+        productList.style.display = 'none';
+
+        // إخفاء كل الصفحات
+        products.forEach(p => p.classList.remove('active'));
+
+        // إظهار صفحة المنتج المختار
+        const selectedProduct = document.getElementById(`product-${prodId}`);
+        if (selectedProduct) {
+          selectedProduct.classList.add('active');
+        }
+
+        // إغلاق القائمة المنسدلة
         dropdown.classList.remove('open');
       });
     });
 
-    // اختيار ملخص منتج من قائمة المنتجات
+    // عند الضغط على ملخص منتج في القائمة الرئيسية (المنتجات)
     productSummaries.forEach(summary => {
       summary.addEventListener('click', () => {
         const prodId = summary.getAttribute('data-product');
-        showProduct(prodId);
+
+        // إخفاء قائمة المنتجات
+        productList.style.display = 'none';
+
+        // إخفاء كل الصفحات
+        products.forEach(p => p.classList.remove('active'));
+
+        // إظهار صفحة المنتج المختار
+        const selectedProduct = document.getElementById(`product-${prodId}`);
+        if (selectedProduct) {
+          selectedProduct.classList.add('active');
+        }
       });
     });
 
-    // زر رجوع في صفحة المنتج
+    // زر الرجوع في صفحات المنتجات
     document.querySelectorAll('.back-btn').forEach(btn => {
       btn.addEventListener('click', () => {
+        // إخفاء كل صفحات المنتجات
         products.forEach(p => p.classList.remove('active'));
+
+        // إظهار قائمة المنتجات الرئيسية
         productList.style.display = 'block';
-        window.scrollTo({top:0, behavior:'smooth'});
       });
     });
 
-    // دالة عرض المنتج وإخفاء القائمة
-    function showProduct(prodId) {
-      productList.style.display = 'none';
-      products.forEach(p => p.classList.remove('active'));
-      const activeProduct = document.getElementById('product-' + prodId);
-      if (activeProduct) {
-        activeProduct.classList.add('active');
-        activeProduct.scrollIntoView({behavior: 'smooth'});
-      }
-    }
-
-    // تعامل مع صور المعرض المصغر لكل منتج
+    // تغيير الصورة الرئيسية عند الضغط على الصور المصغرة (thumbnails)
     document.querySelectorAll('.thumbnail-container').forEach(container => {
-      const productId = container.getAttribute('data-product');
-      const mainImg = document.getElementById('main-img-' + productId);
-      const thumbnails = container.querySelectorAll('.thumbnail');
+      const prodId = container.getAttribute('data-product');
+      const mainImg = document.getElementById(`main-img-${prodId}`);
 
-      thumbnails.forEach(thumb => {
+      container.querySelectorAll('.thumbnail').forEach(thumb => {
         thumb.addEventListener('click', () => {
+          // تغيير الصورة الرئيسية إلى الصورة المختارة
           mainImg.src = thumb.src;
-          thumbnails.forEach(t => t.classList.remove('selected'));
+
+          // تمييز الصورة المختارة
+          container.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('selected'));
           thumb.classList.add('selected');
         });
       });
