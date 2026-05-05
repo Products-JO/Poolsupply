@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aqua Pro Pool Supplies</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #0ea5e9; /* Sky 500 */
+      --secondary: #38bdf8; /* Sky 400 */
+      --accent: #bae6fd; /* Sky 200 */
+      --dark: #0f172a; /* Slate 900 */
+      --dark-card: #1e293b; /* Slate 800 */
+      --white: #ffffff;
+      --bg-body: #020617; /* Slate 950 */
+      --text-main: #f1f5f9; /* Slate 100 */
+      --text-muted: #94a3b8; /* Slate 400 */
+      --success: #25D366;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      --radius: 16px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      overflow-x: hidden;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      min-height: 60vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      text-align: center;
+      padding: 60px 20px;
+      color: white;
+      overflow: hidden;
+      border-bottom: 1px solid #334155;
+    }
+
+    /* Dark Mode Bubbles */
+    .bubble {
+      position: absolute;
+      background: rgba(14, 165, 233, 0.15); /* Brand color low opacity */
+      border-radius: 50%;
+      animation: floatUp 8s infinite ease-in-out;
+      box-shadow: 0 0 10px rgba(14, 165, 233, 0.2);
+    }
+
+    .bubble:nth-child(1) { width: 80px; height: 80px; left: 10%; bottom: -80px; animation-delay: 0s; }
+    .bubble:nth-child(2) { width: 40px; height: 40px; left: 20%; bottom: -40px; animation-delay: 2s; }
+    .bubble:nth-child(3) { width: 60px; height: 60px; left: 80%; bottom: -60px; animation-delay: 4s; }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0); opacity: 0; }
+      50% { opacity: 0.6; }
+      100% { transform: translateY(-400px); opacity: 0; }
+    }
+
+    .hero-content {
+      z-index: 2;
+      max-width: 800px;
+    }
+
+    .logo-icon {
+      font-size: 3rem;
+      color: var(--primary);
+      margin-bottom: 15px;
+      filter: drop-shadow(0 0 15px rgba(14, 165, 233, 0.6));
+    }
+
+    .hero-title {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      line-height: 1.2;
+      margin-bottom: 10px;
+      color: var(--white);
+    }
+
+    .hero-subtitle {
+      font-size: 1.1rem;
+      opacity: 0.8;
+      margin-bottom: 30px;
+      font-weight: 300;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 12px 30px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 700;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-call {
+      background: var(--primary);
+      color: var(--white);
+      box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+      border: 1px solid transparent;
+    }
+
+    .btn-call:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(14, 165, 233, 0.6);
+      background: var(--secondary);
+    }
+
+    .stats-container {
+      background: var(--dark-card);
+      width: 90%;
+      max-width: 1000px;
+      margin: -40px auto 40px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      display: flex;
+      justify-content: space-around;
+      padding: 20px;
+      position: relative;
+      z-index: 3;
+      flex-wrap: wrap;
+      gap: 20px;
+      border: 1px solid #334155;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-num {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--primary);
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .sticky-nav {
+      position: sticky;
+      top: 0;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(10px);
+      z-index: 100;
+      border-bottom: 1px solid #334155;
+      padding: 15px 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .nav-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .search-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+
+    .brand-small {
+      font-weight: 900;
+      color: var(--primary);
+      font-size: 1.2rem;
+      display: none;
+    }
+
+    .search-box {
+      position: relative;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 10px 40px 10px 15px;
+      border-radius: 20px;
+      border: 1px solid #475569;
+      background: #1e293b;
+      color: white;
+      font-family: inherit;
+      outline: none;
+      transition: border 0.3s;
+    }
+
+    .search-box input:focus {
+      border-color: var(--primary);
+      background: #0f172a;
+    }
+
+    .search-box i {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #64748b;
+    }
+
+    .filters-scroll {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 5px;
+      scrollbar-width: none;
+    }
+
+    .filters-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .filter-btn {
+      background: transparent;
+      border: 1px solid #475569;
+      padding: 8px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 600;
+      color: var(--text-muted);
+      white-space: nowrap;
+      transition: all 0.3s;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+    }
+
+    .filter-btn.active,
+    .filter-btn:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: 0 4px 10px rgba(14, 165, 233, 0.3);
+    }
+
+    main {
+      padding: 40px 20px;
+      max-width: 1400px;
+      margin: 0 auto;
+      min-height: 50vh;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .section-header h2 {
+      color: var(--white);
+      font-size: 2rem;
+      margin-bottom: 10px;
+      font-weight: 800;
+    }
+
+    .section-header p {
+      color: var(--text-muted);
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 25px;
+    }
+
+    .product-card {
+      background: var(--dark-card);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s, box-shadow 0.3s;
+      border: 1px solid #334155;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(14, 165, 233, 0.15);
+      border-color: var(--primary);
+    }
+
+    .img-wrapper {
+      position: relative;
+      padding-top: 100%;
+      overflow: hidden;
+      background: #0f172a;
+      cursor: pointer;
+    }
+
+    .img-wrapper img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s;
+    }
+
+    .product-card:hover .img-wrapper img {
+      transform: scale(1.1);
+    }
+
+    .badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--primary);
+      padding: 5px 12px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      text-transform: uppercase;
+      border: 1px solid rgba(14, 165, 233, 0.3);
+    }
+
+    .card-details {
+      padding: 20px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .prod-name-en {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--white);
+      margin-bottom: 5px;
+    }
+
+    .prod-name-ar {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 15px;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    .whatsapp-btn {
+      background: rgba(37, 211, 102, 0.1);
+      color: var(--success);
+      border: 1px solid var(--success);
+      text-decoration: none;
+      padding: 10px;
+      border-radius: 10px;
+      text-align: center;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.3s;
+    }
+
+    .whatsapp-btn:hover {
+      background: var(--success);
+      color: white;
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(5px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+      animation: fadeIn 0.3s;
+    }
+
+    .modal-content {
+      background: var(--dark-card);
+      width: 100%;
+      max-width: 500px;
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      animation: slideUp 0.3s;
+      border: 1px solid #475569;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(0, 0, 0, 0.5);
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      z-index: 10;
+      font-size: 1.2rem;
+      color: #fff;
+    }
+
+    .modal-img-container {
+      width: 100%;
+      height: 300px;
+      background: #0f172a;
+    }
+
+    .modal-img-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .modal-info {
+      padding: 25px;
+      text-align: center;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .action-btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: opacity 0.3s;
+    }
+    
+    .action-btn:hover {
+        opacity: 0.9;
+    }
+
+    .btn-wa {
+      background: var(--success);
+      color: white;
+    }
+
+    .btn-ph {
+      background: var(--primary);
+      color: white;
+    }
+
+    footer {
+      background: var(--dark);
+      color: white;
+      text-align: center;
+      padding: 40px 20px;
+      margin-top: 50px;
+      border-top: 1px solid #334155;
+    }
+
+    .footer-logo {
+      font-size: 1.5rem;
+      font-weight: 900;
+      margin-bottom: 10px;
+      color: var(--primary);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @media (min-width: 768px) {
+      .nav-content {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .brand-small {
+        display: block;
+      }
+
+      .search-box {
+        max-width: 300px;
+      }
+    }
+
+    .loader {
+      border: 4px solid #1e293b;
+      border-top: 4px solid var(--primary);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 50px auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+
+<body>
+
+  <section class="hero">
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+
+    <div class="hero-content">
+      <i class="fas fa-water logo-icon"></i>
+      <h1 class="hero-title">Aqua Pro <span style="color:var(--primary)">Pool Supplies</span></h1>
+      <p class="hero-subtitle">Everything Your Pool Needs ÃÂ¢ÃÂÃÂ¢ Jordan's Premier Pool Equipment</p>
+
+      <div class="cta-buttons">
+        <a href="tel:0797610007" class="btn btn-call">
+          <i class="fas fa-phone-alt"></i> Call Now
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <div class="stats-container">
+    <div class="stat-item">
+      <div class="stat-num" id="stat-count">0</div>
+      <div class="stat-label">Products</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="stat-cats">0</div>
+      <div class="stat-label">Categories</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">Quality Guaranteed</div>
+    </div>
+  </div>
+
+  <nav class="sticky-nav">
+    <div class="nav-content">
+      <div class="search-row">
+        <div class="brand-small">Aqua Pro</div>
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="Search products..." oninput="filterSearch(this.value)">
+        </div>
+      </div>
+
+      <div class="filters-scroll" id="navFilters">
+        <button class="filter-btn active" onclick="filterCat('all', this)">All</button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="section-header">
+      <h2>Our Products</h2>
+      <p>Professional pool equipment & supplies ÃÂ¢ÃÂÃÂ trusted by pools across Jordan</p>
+    </div>
+
+    <div id="loader" class="loader"></div>
+    <div class="products-grid" id="grid"></div>
+  </main>
+
+  <footer>
+    <div class="footer-logo">Aqua Pro</div>
+    <p>ÃÂ°ÃÂÃÂÃÂ 0797610007 | Jordan</p>
+    <p style="margin-top:10px; opacity:0.6; font-size:0.8rem;">ÃÂÃÂ© 2025 Aqua Pro Pool Supplies. All rights reserved.</p>
+  </footer>
+
+  <div class="modal-overlay" id="modal" onclick="closeModal(event)">
+    <div class="modal-content">
+      <button class="close-modal" onclick="closeModal()">ÃÂ¢ÃÂÃÂ</button>
+      <div class="modal-img-container">
+        <img id="modal-img" src="" alt="Product">
+      </div>
+      <div class="modal-info">
+        <h3 id="modal-name" style="color:var(--white); margin-bottom:5px;"></h3>
+        <p id="modal-name-ar" style="color:var(--text-muted); margin-bottom:20px;"></p>
+
+        <div class="modal-actions">
+          <a href="tel:0797610007" class="action-btn btn-ph">
+            <i class="fas fa-phone"></i> Call
+          </a>
+          <a href="https://wa.me/962797610007" target="_blank" class="action-btn btn-wa">
+            <i class="fab fa-whatsapp"></i> WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const BASEROW_TOKEN = 'wNQeXBMHFwfpEb7ghaeC5nalBcLoA9Kv';
+    const TABLE_CATEGORIES = '961127';
+    const TABLE_PRODUCTS = '961128';
+
+    let allProducts = [];
+    let currentCat = 'all';
+    const grid = document.getElementById('grid');
+    const loader = document.getElementById('loader');
+    const navFilters = document.getElementById('navFilters');
+    const statCount = document.getElementById('stat-count');
+    const statCats = document.getElementById('stat-cats');
+
+    async function getBaserowData(tableId) {
+      const url = `https://api.baserow.io/api/database/rows/table/${tableId}/?user_field_names=true&size=200`;
+      const response = await fetch(url, {
+        headers: { 'Authorization': `Token ${BASEROW_TOKEN}` }
+      });
+      if (!response.ok) throw new Error(`Failed to load table ${tableId}`);
+      return await response.json();
+    }
+
+    async function init() {
+      try {
+        const [catData, prodData] = await Promise.all([
+          getBaserowData(TABLE_CATEGORIES),
+          getBaserowData(TABLE_PRODUCTS)
+        ]);
+
+        buildFilterButtons(catData.results);
+
+        allProducts = prodData.results.map(item => {
+          let catName = 'General';
+          if (item.cat && Array.isArray(item.cat) && item.cat.length > 0) {
+            catName = item.cat[0].value || 'General';
+          }
+
+          let imgUrl = 'https://via.placeholder.com/300?text=No+Image';
+          if (item.Image && Array.isArray(item.Image) && item.Image.length > 0) {
+            imgUrl = item.Image[0].url;
+          }
+
+          return {
+            id: item.id,
+            name: item.Name || 'Product',
+            nameAr: item.NameAr || '',
+            cat: catName,
+            img: imgUrl,
+            price: item.Price || 0
+          };
+        });
+
+        statCount.textContent = allProducts.length;
+        renderProducts(allProducts);
+        loader.style.display = 'none';
+
+      } catch (error) {
+        console.error('Error fetching ', error);
+        grid.innerHTML = `<div style="text-align:center; width:100%; color:#ef4444;">Error loading products. Please check API connection.</div>`;
+        loader.style.display = 'none';
+      }
+    }
+
+    function buildFilterButtons(categories) {
+      let html = `<button class="filter-btn active" onclick="filterCat('all', this)">All</button>`;
+
+      categories.forEach(catItem => {
+        const name = catItem.Name;
+        if (name) {
+          html += `<button class="filter-btn" onclick="filterCat('${name}', this)">${name}</button>`;
+        }
+      });
+
+      navFilters.innerHTML = html;
+      statCats.textContent = categories.length;
+    }
+
+    function renderProducts(list) {
+      grid.innerHTML = '';
+      if (list.length === 0) {
+        grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding:40px; color:var(--text-muted);">No products found.</div>`;
+        return;
+      }
+
+      list.forEach((p, index) => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.style.animation = `slideUp 0.5s ease forwards ${index * 0.05}s`;
+
+        card.innerHTML = `
+          <div class="img-wrapper" onclick="openModal(${p.id})">
+            <span class="badge">${p.cat}</span>
+            <img src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/300?text=Error'">
+          </div>
+          <div class="card-details">
+            <div>
+              <h3 class="prod-name-en">${p.name}</h3>
+              <p class="prod-name-ar">${p.nameAr}</p>
+            </div>
+            <a href="https://wa.me/962797610007?text=Hi, I'm interested in ${encodeURIComponent(p.name)}" target="_blank" class="whatsapp-btn">
+              <i class="fab fa-whatsapp"></i> Order via WhatsApp
+            </a>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    window.filterCat = function (cat, btn) {
+      currentCat = cat;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+
+      const filtered = cat === 'all' ? allProducts : allProducts.filter(p => p.cat === cat);
+      renderProducts(filtered);
+    }
+
+    window.filterSearch = function (val) {
+      const term = val.toLowerCase();
+      const filtered = allProducts.filter(p =>
+        (currentCat === 'all' || p.cat === currentCat) &&
+        (p.name.toLowerCase().includes(term) || (p.nameAr && p.nameAr.toLowerCase().includes(term)))
+      );
+      renderProducts(filtered);
+    }
+
+    const modal = document.getElementById('modal');
+    const mImg = document.getElementById('modal-img');
+    const mName = document.getElementById('modal-name');
+    const mAr = document.getElementById('modal-name-ar');
+
+    window.openModal = function (id) {
+      const p = allProducts.find(x => x.id === id);
+      if (!p) return;
+      mImg.src = p.img;
+      mName.textContent = p.name;
+      mAr.textContent = p.nameAr;
+      modal.classList.add('open');
+    }
+
+    window.closeModal = function (e) {
+      if (e && e.target !== modal && !e.target.classList.contains('close-modal')) return;
+      modal.classList.remove('open');
+    }
+
+    init();
+  </script>
+</body>
+
+</html>
+
